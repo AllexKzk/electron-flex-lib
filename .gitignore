@@ -88,6 +88,9 @@ typings/
 # Electron-Forge
 out/
 
+#IDE:
+.idea
+
 #App Dir
 lib/
 sources/

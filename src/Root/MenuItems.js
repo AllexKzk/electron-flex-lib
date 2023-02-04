@@ -5,10 +5,10 @@ import {sendRequest} from "./apiWorker";
 function ItemModal(props) { //common modal window for items
     const style = {
         position: 'absolute',
+        display: 'flex',
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 400,
         bgcolor: 'background.paper',
         border: '2px solid #000',
         boxShadow: 24,
@@ -26,11 +26,10 @@ function ItemModal(props) { //common modal window for items
         <Modal
             open={isOpen}
             onClose={props.menuClose}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
+            disableEnforceFocus
         >
             <Box sx={style}>
-                <TextField error={props.isErr} id="page-url" value={input} label={props.label} variant="outlined" onChange={e => setInput(e.target.value)} />
+                <TextField disableEnforceFocus error={props.isErr} id="page-url" value={input} label={props.label} variant="outlined" onChange={e => setInput(e.target.value)} />
                 <Button variant="outlined" onClick={clicked}>Добавить</Button>
             </Box>
         </Modal>

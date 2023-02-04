@@ -1,8 +1,8 @@
 {
-  "name": "spot",
-  "productName": "spot",
-  "version": "1.0.0",
-  "description": "My Electron application description",
+  "name": "electronflexlib",
+  "productName": "electronflexlib",
+  "version": "0.5",
+  "description": "Easy lib for save&read posts from web",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",
@@ -14,7 +14,7 @@
   "keywords": [],
   "author": {
     "name": "AllexKzk",
-    "email": "san4a_kozikov@mail.ru"
+    "email": "allexnevaskii@gmail.com"
   },
   "license": "MIT",
   "devDependencies": {
