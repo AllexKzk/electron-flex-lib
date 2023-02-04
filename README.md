@@ -9,7 +9,7 @@ electronFlexLib - простое настольное приложения дл�
 **✓ kknights.com**  
 **× DTF** (in progress)
 ### Скачать:
-**✓ Linux: [.deb](./builds/deb/electronflexlib_0.5_amd64.deb)**  
+**✓ Linux: [.deb](https://github.com/AllexKzk/electron-flex-lib/raw/main/builds/deb/electronflexlib_0.5_amd64.deb)**  
 **× Windows: exe (in progress)**
 ### Roadmap:
 **× Добавить exe билд**  
