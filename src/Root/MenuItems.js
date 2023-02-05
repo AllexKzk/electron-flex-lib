@@ -26,10 +26,9 @@ function ItemModal(props) { //common modal window for items
         <Modal
             open={isOpen}
             onClose={props.menuClose}
-            disableEnforceFocus
         >
             <Box sx={style}>
-                <TextField disableEnforceFocus error={props.isErr} id="page-url" value={input} label={props.label} variant="outlined" onChange={e => setInput(e.target.value)} />
+                <TextField error={props.isErr} id="page-url" value={input} label={props.label} variant="outlined" onChange={e => setInput(e.target.value)} />
                 <Button variant="outlined" onClick={clicked}>Добавить</Button>
             </Box>
         </Modal>

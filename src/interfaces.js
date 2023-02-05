@@ -22,7 +22,7 @@ async function kknightsUnify(json) {
     const getMediaContent = (content) => {
         let media = [];
         for (let img of content) {
-            const saveDir = path.join('./', unified.postName);
+            const saveDir = unified.postName;
             const filename = img.url.split('/').pop();
             ipcRenderer.send('saveMedia', {url: img.url, dir: saveDir, filename: filename});
             media.push(

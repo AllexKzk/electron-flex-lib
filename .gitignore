@@ -94,3 +94,6 @@ out/
 #App Dir
 lib/
 sources/
+
+#cert:
+*.pem

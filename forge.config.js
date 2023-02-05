@@ -9,6 +9,8 @@ module.exports = {
       config: {
         iconUrl: __dirname + '/assets/icon.ico',
         setupIcon: __dirname + '/assets/icon.ico',
+        certificateFile: __dirname + './cert.pem',
+        certificatePassword: __dirname + './key.pem',
       },
     },
     {
