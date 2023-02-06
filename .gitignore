@@ -96,4 +96,5 @@ lib/
 sources/
 
 #cert:
-*.pem
+*.key
+*.out.pfx

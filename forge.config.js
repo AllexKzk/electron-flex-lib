@@ -9,8 +9,8 @@ module.exports = {
       config: {
         iconUrl: __dirname + '/assets/icon.ico',
         setupIcon: __dirname + '/assets/icon.ico',
-        certificateFile: __dirname + '/assets/out.pfx',
-        certificatePassword: 'mogilev',
+        //certificateFile: __dirname + '/assets/out.pfx',
+        //certificatePassword: __dirname + '/assets/key.key',
       },
     },
     {
