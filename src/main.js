@@ -72,11 +72,9 @@ ipcMain.on('saveMedia', async (event, args) => {
     let data = new Stream();
 
     response.on('end', () => {
-      const srcDir = './sources/' + args.dir;
-      fs.mkdir(srcDir, { recursive: true }, (err) => {
-        if (err) console.log(err);
-      });
-      fs.writeFileSync(srcDir + '/' + args.filename, data.read());
+      const srcDir = path.join('./sources', args.dir);
+      fs.mkdirSync(srcDir, { recursive: true });
+      fs.writeFileSync(path.join(srcDir, args.filename), data.read());
     });
     response.on('data', (chunk) => {
       data.push(chunk);
