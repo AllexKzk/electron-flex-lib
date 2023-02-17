@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 const fs = require("fs");
 const path = require("path");
 import {interfaces} from "./interfaces";
+const { spawn } = require('child_process');
 function pathArrayToString(array) {
     let path = '/';
     for (let folder of array) {
@@ -38,7 +39,7 @@ async function savePost(json, folder, site, updateCallback) {
     interfaces[site](json).then(unified => {
         fs.writeFile('./lib' + pathArrayToString(folder) + unified.postName + '.json', JSON.stringify(unified), (err) => {
             if (err) return console.log(err);
-            updateCallback();
+            updateCallback(); //update page
         });
     });
 }
@@ -63,6 +64,9 @@ async function createDir(path, name){
     });
 }
 
+async function openSource(postName){
+    spawn('open', [path.join('./sources', postName)]);
+}
 
 contextBridge.exposeInMainWorld('electron', {
     getFolders: (root) => getFolders(root),
@@ -70,4 +74,5 @@ contextBridge.exposeInMainWorld('electron', {
     sendRequestFromServer: async (url) => sendRequestFromServer(url),
     receiveData: async (pathToSave, site, updateCallback) => receiveData(pathToSave, site, updateCallback),
     createDir: async (path, name) => createDir(path, name),
+    openSource: async (postName) => openSource(postName)
 });

@@ -1,8 +1,7 @@
-import path from "path";
-
 const { ipcRenderer } = require('electron');
 export const interfaces = {
-  kknights: async (data) => await kknightsUnify(data)
+    kknights: async (data) => await kknightsUnify(data),
+    dtf: async (data) => dtfUnify(data)
 };
 
 const uniform = {
@@ -13,6 +12,23 @@ const uniform = {
     content: []
 };
 
+async function dtfUnify(json) {
+    let unified = structuredClone(uniform);
+    const result = json.result.data;
+    unified.author = result.author.name;
+    unified.title = result.title;
+    unified.postName = unified.title.replace(/<*>*\|*\**\.*\?*:*\\*\/*/gm, '');
+    const html = result.entryContent.html;
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const content = doc.getElementsByClassName('content--full')[0];
+    console.log(content);
+    unified.content.push({
+        type: 'paragraph',
+        htmlText: content.outerHTML
+    });
+    return unified;
+}
 async function kknightsUnify(json) {
     let unified = structuredClone(uniform);
     unified.author = json.user.username;

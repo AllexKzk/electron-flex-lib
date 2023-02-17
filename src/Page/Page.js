@@ -12,13 +12,15 @@ export default function Page() {
     }, []);
     return (
         <>
-            <Overlay path={location.state.src}/>
             {data &&
-                <Container>
-                    <Box>
-                        {viewtify(data)}
-                    </Box>
-                </Container>
+                <>
+                    <Overlay path={location.state.src} source={data.postName}/>
+                    <Container>
+                        <Box>
+                            {viewtify(data)}
+                        </Box>
+                    </Container>
+                </>
             }
         </>
     );
