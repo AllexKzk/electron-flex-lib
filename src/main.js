@@ -68,7 +68,9 @@ ipcMain.on('sendReq', async(event, args) => {
 
 ipcMain.on('saveMedia', async (event, args) => {
   const request = net.request(args.url);
+  console.log(args.url);
   request.on('response', response => {
+    console.log(response);
     let data = new Stream();
 
     response.on('end', () => {
