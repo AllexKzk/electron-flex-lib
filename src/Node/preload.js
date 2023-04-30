@@ -3,6 +3,8 @@ const { contextBridge, ipcRenderer } = require('electron');
 const fs = require("fs");
 const path = require("path");
 const { spawn } = require('child_process');
+let alertHandler = null;
+
 function pathArrayToString(array) {
     let path = '/';
     for (let folder of array) {
@@ -27,12 +29,9 @@ function getFolders(root) {
     return folders;
 }
 
-async function sendRequestFromServer(url) {
-    ipcRenderer.send('sendReq', {url: url});
-}
-
-async function receiveData(pathToSave, site) {
-    ipcRenderer.on("getRes", (event, args) => savePost(args, pathToSave, site));
+async function sendRequestFromServer(url, pathToSave, site) {
+    ipcRenderer.on('getRes', (event, args) => savePost(args, pathToSave, site));    //set response handler
+    ipcRenderer.send('sendReq', {url: url});                                        //send request
 }
 
 async function savePost(json, folder, site) {
@@ -56,11 +55,16 @@ async function getFile(src, filename, type, callback) {
     });
 }
 
-
 async function createDir(path, name){
-    fs.mkdir('./lib' + pathArrayToString(path) + name, err => {
-        if (err) return console.log(err);
-    });
+    if (['.', '/', '\\', '?', '*', ':'].map(char => name.includes(char)).includes(true))    //check name
+        alertHandler('Непристойные символы', 'error');
+    else                                                                                    //create dir
+        fs.mkdir('./lib' + pathArrayToString(path) + name, err => {
+            if (err)
+                alertHandler(err.message, 'error');
+            else
+                alertHandler('Папка успешно создана', 'success');                                         
+        }); 
 }
 
 async function openSource(postName){
@@ -80,12 +84,12 @@ async function updateSettings(config) {
 }
 
 contextBridge.exposeInMainWorld('electron', {
-    getFolders: (root) => getFolders(root),
-    getFile: async (src, filename, type, callback) => getFile(src, filename, type, callback),
-    sendRequestFromServer: async (url) => sendRequestFromServer(url),
-    receiveData: async (pathToSave, site) => receiveData(pathToSave, site),
-    createDir: async (path, name) => createDir(path, name),
-    openSource: async (postName) => openSource(postName),
-    getSettings: () => getSettings(),
-    updateSettings: async (config) => updateSettings(config)
+    getFolders: (root) => getFolders(root),                                                                     //open folder by path: ./lib/ + root
+    getFile: async (src, filename, type, callback) => getFile(src, filename, type, callback),                   //get Page json
+    sendRequestFromServer: async (url, pathToSave, site) => sendRequestFromServer(url, pathToSave, site),       //call ipcMain to send request
+    createDir: async (path, name) => createDir(path, name),                                                     //create dit with name by path
+    openSource: async (postName) => openSource(postName),                                                       //open folder with sources
+    getSettings: () => getSettings(),                                                                           //get palette settings from json
+    updateSettings: async (config) => updateSettings(config),                                                   //update settings in json
+    setAlertHandler: async (handler) => {alertHandler = handler}                                                //callTopHandler
 });
