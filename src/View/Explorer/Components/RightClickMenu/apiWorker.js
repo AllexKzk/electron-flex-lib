@@ -1,4 +1,6 @@
-export async function sendRequest(postUrl, pathToSave, resCallback) {
+import { callTopHandler } from "../../../AlertHandling/HandlersCollection";
+
+export async function sendRequest(postUrl, pathToSave) {
     const reName = /^(?:http:\/\/|www\.|https:\/\/|)([^.]+)/img;        //dns regex
     const site = reName.exec(postUrl)?.[1];                             //site name from url
 
@@ -6,7 +8,7 @@ export async function sendRequest(postUrl, pathToSave, resCallback) {
     const postId = rePostId.exec(postUrl)?.[1];
 
     if (!postId || !site){                                              //check URL
-        resCallback('Неверная ссылка >_>');
+        callTopHandler('Неверная ссылка >_>', 'error');
         return;
     }
 
@@ -16,7 +18,7 @@ export async function sendRequest(postUrl, pathToSave, resCallback) {
     }
 
     if (!supportedSites.hasOwnProperty(site)){                          //check API
-        resCallback('API не поддерживается');
+        callTopHandler('API не поддерживается', 'error');
         return;
     }
     

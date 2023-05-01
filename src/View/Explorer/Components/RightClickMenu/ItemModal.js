@@ -26,9 +26,8 @@ export default function ItemModal(props) {
     });
 
     useEffect(() => {
-        if (alert?.type === 'success'){
-            props.closeMenu();
-        }
+        if (alert?.type === 'success')
+            setTimeout(props.closeMenu, 200);
     }, [alert]);
 
     const clicked = async() => {

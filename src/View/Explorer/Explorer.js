@@ -36,7 +36,7 @@ export default function Explorer() {
             <RootBar setter={setPath} getter={path}/>
             <Box onContextMenu={handleContextMenu} minHeight={'90vh'}>
                 <Grid container spacing={2} sx = {{m: 'auto', maxWidth: '100%'}}>
-                    {folders.map((folder) => <Tab callback={changeFolder} isJson={folder.isJson} key={folder.name + '_folder_key'} name={folder.name}/>)}
+                    {folders.map((folder) => <Tab callback={changeFolder} isFile={folder.isFile} key={folder.name + '_folder_key'} name={folder.name}/>)}
                 </Grid>
                 <RightClickMenu callMenu={contextMenu} closeMenu={handleCloseMenu} path={path}/>
             </Box>

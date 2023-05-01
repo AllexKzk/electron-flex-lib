@@ -15,15 +15,18 @@ function pathArrayToString(array) {
 
 function getFolders(root) {
     const lib = path.resolve('./lib' + pathArrayToString(root));
-    if (!fs.existsSync(lib)){
-        console.log('create dir: ' + lib);
-        fs.mkdirSync(lib);
+    if (!fs.existsSync(lib)){                                           //if ./lib doesn't exist
+        fs.mkdir(lib, err => {                                          //create it
+            if (err)
+                alertHandler(err);
+        });
     }
-    let folders = [];
-    fs.readdirSync(lib).forEach(function(file) {
+
+    let folders = [];               
+    fs.readdirSync(lib, {withFileTypes: true}).forEach(dirent => {
         folders.push({
-            name: file,
-            isJson: path.extname(path.join(lib, file)) === '.json'
+            name: dirent.name,
+            isFile: dirent.isFile()
         });
     });
     return folders;
@@ -37,7 +40,9 @@ async function sendRequestFromServer(url, pathToSave, site) {
 async function savePost(json, folder, site) {
     interfaces[site](json).then(unified => {
         fs.writeFile('./lib' + pathArrayToString(folder) + unified.postName + '.json', JSON.stringify(unified), (err) => {
-            if (err) return console.log(err);
+            if (err)
+                alertHandler(err.message, 'error');
+            alertHandler('Пост сохранён (˵ •̀ ᴗ - ˵ )', 'success');
         });
     });
 }
@@ -83,6 +88,11 @@ async function updateSettings(config) {
     });
 }
 
+async function setAlertHandler(handler) {
+    alertHandler = handler;                                                             //preload handler
+    ipcRenderer.on('handleAlert', (event, args) => handler(args.message, args.type));   //ipcMain handler
+}
+
 contextBridge.exposeInMainWorld('electron', {
     getFolders: (root) => getFolders(root),                                                                     //open folder by path: ./lib/ + root
     getFile: async (src, filename, type, callback) => getFile(src, filename, type, callback),                   //get Page json
@@ -91,5 +101,5 @@ contextBridge.exposeInMainWorld('electron', {
     openSource: async (postName) => openSource(postName),                                                       //open folder with sources
     getSettings: () => getSettings(),                                                                           //get palette settings from json
     updateSettings: async (config) => updateSettings(config),                                                   //update settings in json
-    setAlertHandler: async (handler) => {alertHandler = handler}                                                //callTopHandler
+    setAlertHandler: async (handler) => setAlertHandler(handler)                                                //callTopHandler
 });
