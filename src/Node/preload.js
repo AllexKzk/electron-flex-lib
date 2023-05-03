@@ -39,8 +39,14 @@ async function sendRequestFromServer(url, pathToSave, site) {
 }
 
 async function savePost(json, folder, site) {
+    ipcRenderer.removeAllListeners('getRes');                                       //remove response handler
+
     //json -> API interface -> unified json for EFL 
     interfaces[site](json).then(unified => { 
+        if (unified.criticalError){                                                 //without save
+            alertHandler(`Пост не сохранён: ${unified.criticalError} ._.)`, 'error');
+            return;
+        }
         unified.hash = hashString(JSON.stringify(unified.content)); //hash content | if it willn't work fast -> rewrite
         fs.writeFile('./lib' + pathArrayToString(folder) + unified.postName + '.json', JSON.stringify(unified), (err) => {
             if (err)
@@ -53,14 +59,11 @@ async function savePost(json, folder, site) {
 
 async function getFile(src, filename, type, callback) {
     const formats = {
-        utf8: (rawData) => {                                           //json page files 
+        utf8: (rawData) => {                                                        //json page files 
             const readyData = JSON.parse(rawData);
-            if (checkHash(readyData.hash, readyData.content))
-                callback(readyData);
-            else
-                callback({});
+            callback(checkHash(readyData.hash, readyData.content) ? readyData : {}) //check hash and send resault
         },      
-        base64: (rawData) => callback(rawData.toString())                 //media files
+        base64: (rawData) => callback(rawData.toString())                           //media files
     }
 
     fs.readFile('.' + pathArrayToString(src) + filename,  type, function (err, data) {
@@ -68,7 +71,7 @@ async function getFile(src, filename, type, callback) {
             if (type == 'utf8') //if we try to open page file
                 alertHandler('Файл не открывается *~*', 'error');
             else                //if we try to open media, it can be loading
-                setTimeout(() => getFile(src, filename, type, callback), 100); //CHECK IT
+                setTimeout(() => getFile(src, filename, type, callback), 100);
         }
         else
             formats[type](data);

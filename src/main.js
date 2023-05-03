@@ -59,12 +59,19 @@ ipcMain.on('sendReq', async(event, args) => {
 
   	const request = net.request(args.url); //send req
 	request.on('response', response => { //process response
-
 		response.on('error', (error) => mainWindow.webContents.send("handleAlert", {message: JSON.stringify(error), type: 'error'}));
 
-		let buffers = [];																								//collect data
-		response.on('data', (chunk) => buffers.push(chunk));															//by chuncks
-		response.on('end', () => mainWindow.webContents.send("getRes", JSON.parse(Buffer.concat(buffers).toString())));	//concat and send
+		console.log(response, response.statusCode);
+
+		if (response.statusCode == 404)
+			mainWindow.webContents.send("handleAlert", {message: 'код 404 ( ͡° ͜ʖ ͡°)', type: 'error'});
+
+		if (response.statusCode == 200){
+			let buffers = [];																								//collect data
+			response.on('data', (chunk) => buffers.push(chunk));															//by chuncks
+			response.on('end', () => mainWindow.webContents.send("getRes", JSON.parse(Buffer.concat(buffers).toString())));	//concat and send
+		}
+		
   	});
   	request.end();
 });

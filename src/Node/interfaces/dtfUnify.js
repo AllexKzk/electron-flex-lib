@@ -3,6 +3,10 @@ showdown  = require('showdown');
 import { uniform } from "./uniform";
 
 export default async function dtfUnify(json) {
+    console.log(json)
+    if (json.result.type != 'entry')
+        return {criticalError: 'По этой ссылке нельзя получить пост'};
+
     let unified = structuredClone(uniform);
     const data = json.result.data;
 

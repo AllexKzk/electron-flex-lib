@@ -7,15 +7,15 @@ import Paragraph from "./Blocks/Paragraph";
 export function viewtify(json) {
     let viewElement = [];
 
-    console.log(json, Object.keys(json).length);
-    if (!Object.keys(json).length){
+    if (!json || !Object.keys(json).length){ //if json is void
         viewElement.push(<Typography> {'Похоже файл повреждён *~*'} </Typography>);
         return viewElement;
     }
 
+    //everything other seems to be good
     viewElement.push(
         <>
-            <Typography variant={'h2'}> {json.title} </Typography>
+            <Typography variant={'h2'}> {json?.title} </Typography>
             <Typography fontStyle={'italic'} >Автор: {json.author}</Typography>
         </>
     );
