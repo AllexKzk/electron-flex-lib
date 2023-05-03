@@ -1,5 +1,5 @@
 export const uniform = {
-    sign: 'fl-sign',
+    hash: null,
     author: '',
     title: '',
     postName: '',

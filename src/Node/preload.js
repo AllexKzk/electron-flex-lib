@@ -1,3 +1,4 @@
+import { checkHash, hashString } from "./interfaces/controller";
 import {interfaces} from "./interfaces/interfaces";
 const { contextBridge, ipcRenderer } = require('electron');
 const fs = require("fs");
@@ -38,25 +39,39 @@ async function sendRequestFromServer(url, pathToSave, site) {
 }
 
 async function savePost(json, folder, site) {
-    interfaces[site](json).then(unified => {
+    //json -> API interface -> unified json for EFL 
+    interfaces[site](json).then(unified => { 
+        unified.hash = hashString(JSON.stringify(unified.content)); //hash content | if it willn't work fast -> rewrite
         fs.writeFile('./lib' + pathArrayToString(folder) + unified.postName + '.json', JSON.stringify(unified), (err) => {
             if (err)
                 alertHandler(err.message, 'error');
-            alertHandler('Пост сохранён (˵ •̀ ᴗ - ˵ )', 'success');
+            else
+                alertHandler('Пост сохранён (˵ •̀ ᴗ - ˵ )', 'success');
         });
     });
 }
 
 async function getFile(src, filename, type, callback) {
+    const formats = {
+        utf8: (rawData) => {                                           //json page files 
+            const readyData = JSON.parse(rawData);
+            if (checkHash(readyData.hash, readyData.content))
+                callback(readyData);
+            else
+                callback({});
+        },      
+        base64: (rawData) => callback(rawData.toString())                 //media files
+    }
+
     fs.readFile('.' + pathArrayToString(src) + filename,  type, function (err, data) {
-        if (err)
-            setTimeout(() => getFile(src, filename, type, callback), 100);
-        else {
-            switch (type){
-                case 'utf8': callback(JSON.parse(data.toString())); break;
-                case 'base64': callback(data.toString()); break;
-            }
+        if (err){
+            if (type == 'utf8') //if we try to open page file
+                alertHandler('Файл не открывается *~*', 'error');
+            else                //if we try to open media, it can be loading
+                setTimeout(() => getFile(src, filename, type, callback), 100); //CHECK IT
         }
+        else
+            formats[type](data);
     });
 }
 
@@ -84,7 +99,7 @@ async function updateSettings(config) {
     const oldConfig = JSON.parse(fs.readFileSync('./src/View/Theming/palette.json'));
     const newConfig = {...oldConfig, common: {...config}};
     fs.writeFile('./src/View/Theming/palette.json', JSON.stringify(newConfig), err => {
-        if (err) console.error(err);
+        if (err) alertHandler(err.message, 'error');
     });
 }
 

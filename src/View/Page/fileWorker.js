@@ -6,8 +6,13 @@ import Paragraph from "./Blocks/Paragraph";
 
 export function viewtify(json) {
     let viewElement = [];
-    if (!json.sign || json.sign !== 'fl-sign' ) //use hash-sum
-        return [<Typography> {'Файл повреждён или создан не системой FlexLib :<'} </Typography>];
+
+    console.log(json, Object.keys(json).length);
+    if (!Object.keys(json).length){
+        viewElement.push(<Typography> {'Похоже файл повреждён *~*'} </Typography>);
+        return viewElement;
+    }
+
     viewElement.push(
         <>
             <Typography variant={'h2'}> {json.title} </Typography>

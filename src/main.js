@@ -50,26 +50,21 @@ app.on('activate', () => {
 	}
 });
 
-
+//REQUESTS:
 ipcMain.on('sendReq', async(event, args) => {
-	if (!net.online){
+	if (!net.online){ //check net connection
 		mainWindow.webContents.send("handleAlert", {message: 'Подключение к интернету отсутствует˙◠˙', type: 'error'});
 		return ;
 	}
-  	const request = net.request(args.url);
 
-	request.on('response', response => {
-		response.on('error', (error) => {
-			mainWindow.webContents.send("handleAlert", {message: JSON.stringify(error), type: 'error'});
-		});
+  	const request = net.request(args.url); //send req
+	request.on('response', response => { //process response
 
-		let buffers = [];
-		response.on('data', (chunk) => {
-			buffers.push(chunk);
-		});
-		response.on('end', () => {
-			mainWindow.webContents.send("getRes", JSON.parse(Buffer.concat(buffers).toString()));
-		});
+		response.on('error', (error) => mainWindow.webContents.send("handleAlert", {message: JSON.stringify(error), type: 'error'}));
+
+		let buffers = [];																								//collect data
+		response.on('data', (chunk) => buffers.push(chunk));															//by chuncks
+		response.on('end', () => mainWindow.webContents.send("getRes", JSON.parse(Buffer.concat(buffers).toString())));	//concat and send
   	});
   	request.end();
 });
@@ -79,24 +74,20 @@ ipcMain.on('saveMedia', async (event, args) => {
 		mainWindow.webContents.send("handleAlert", {message: 'Подключение к интернету отсутствует˙◠˙', type: 'error'});
 		return ;
 	}
+
 	const request = net.request(args.url);
-	
 	request.on('response', response => {
-		response.on('error', (error) => {
-			mainWindow.webContents.send("handleAlert", {message: JSON.stringify(error), type: 'error'});
-		});
+		response.on('error', (error) => mainWindow.webContents.send("handleAlert", {message: JSON.stringify(error), type: 'error'}));
 
 		let data = new Stream();
-		response.on('data', (chunk) => {
-			data.push(chunk);
-		});
+		response.on('data', (chunk) => data.push(chunk));
 		response.on('end', () => {
 			const srcDir = path.join('./sources', args.dir);					
-			fs.mkdir(srcDir, { recursive: true }, err => { 				//create source dir
+			fs.mkdir(srcDir, { recursive: true }, err => { 									//create source dir
 				if (err)
 					mainWindow.webContents.send("handleAlert", {message: JSON.stringify(err), type: 'error'});
 				else
-					fs.writeFile(path.join(srcDir, args.filename), data.read(), err => { //write source file
+					fs.writeFile(path.join(srcDir, args.filename), data.read(), err => { 	//write source file
 						if (err)
 							mainWindow.webContents.send("handleAlert", {message: JSON.stringify(err), type: 'error'});
 					});
