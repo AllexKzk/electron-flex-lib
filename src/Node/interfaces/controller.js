@@ -1,3 +1,5 @@
+import path from "path";
+
 export function checkHash(hash, content) {
     return hash === hashString(JSON.stringify(content));
 }

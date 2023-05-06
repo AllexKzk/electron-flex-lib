@@ -1,7 +1,9 @@
 export const uniform = {
     hash: null,
-    author: '',
-    title: '',
-    postName: '',
-    content: []
+    data : {
+        author: '',
+        title: '',
+        postName: '',
+        content: []
+    }
 };

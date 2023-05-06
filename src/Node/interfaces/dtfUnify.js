@@ -3,27 +3,26 @@ showdown  = require('showdown');
 import { uniform } from "./uniform";
 
 export default async function dtfUnify(json) {
-    console.log(json)
-    if (json.result.type != 'entry')
-        return {criticalError: 'По этой ссылке нельзя получить пост'};
-
     let unified = structuredClone(uniform);
-    const data = json.result.data;
+    let unifiedData = unified.data;
+    const data = json.result;
 
-    unified.author = data.author.name;
-    unified.title = data.title;
-    unified.postName = unified.title.replace(/<*>*\|*\**\.*\?*:*\\*\/*/gm, ''); //cut wrong chars for filesys
+    unifiedData.author = data.author.name;
+    unifiedData.title = data.title;
+    unifiedData.postName = unifiedData.title.replace(/<*>*\|*\**\.*\?*:*\\*\/*/gm, ''); //cut wrong chars for filesys
+    if (!unifiedData.postName.length)                                               
+        unifiedData.postName = 'unknown';                                           //change to id
 
-    const dtfPicsSource = 'https://leonardo.osnova.io/'; //dtf media storage
-    const dtfAudioSource = 'https://leonardo2.osnova.io/audio/'; //dtf audio storage
-    const dtfEmbeds = { //link for supported embeds
+    const dtfPicsSource = 'https://leonardo.osnova.io/';                        //dtf media storage
+    const dtfAudioSource = 'https://leonardo2.osnova.io/audio/';                //dtf audio storage
+    const dtfEmbeds = {                                                         //link for supported embeds
         youtube: 'https://www.youtube.com/embed/'
     };
 
     const getMediaContent = (content) => {
         let media = [];
         const converter = new showdown.Converter();
-        const saveDir = unified.postName;
+        const saveDir = unifiedData.postName;
         for (const [index, img] of Object.entries(content)) {
             const type = img.image.data.type === 'gif' ? 'mp4' : img.image.data.type; //gif is lie x_x
             const filename = img.image.data.uuid + '.' + type;
@@ -41,10 +40,10 @@ export default async function dtfUnify(json) {
     };
 
     const getAudioContent = (content) => {
-        ipcRenderer.send('saveMedia', {url: dtfAudioSource + content.data.uuid, dir: unified.postName, filename: content.data.filename});
+        ipcRenderer.send('saveMedia', {url: dtfAudioSource + content.data.uuid, dir: unifiedData.postName, filename: content.data.filename});
         return[
             {
-                src: ['sources', unified.postName],
+                src: ['sources', unifiedData.postName],
                 filename: content.data.filename,
                 type: 'audio',
                 caption: ''
@@ -55,21 +54,21 @@ export default async function dtfUnify(json) {
     const dtfTypes = {
         'text': (block) => {
             const converter = new showdown.Converter();
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'paragraph',
                 htmlText: converter.makeHtml(block.data.text),
                 hidden: block.hidden
             });
         },
         'media': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'gallery',
                 media: getMediaContent(block.data.items),
                 hidden: block.hidden
             });
         },
         'quote': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'quote',
                 quoteHTML: block.data.text,
                 citeHTML: block.data.subline1 + " " + block.data.subline2,
@@ -77,12 +76,12 @@ export default async function dtfUnify(json) {
             });
         },
         'delimiter': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'divider'
             });
         },
         'video': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'embed',
                 isSupported: dtfEmbeds.hasOwnProperty(block.data.video.data.external_service.name),
                 src: dtfEmbeds[block.data.video.data.external_service.name] + block.data.video.data.external_service.id,
@@ -90,23 +89,23 @@ export default async function dtfUnify(json) {
             });
         },
         'yamusic': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'embed',
                 isSupported: true,
                 src: block.data.yamusic.data.box_data.src,
             });
         },
         'spotify': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'embed',
                 isSupported: true,
                 src: block.data.spotify.data.box_data.src
             });
         }, 
         'link':(block) => {
-            unified.content.push({
-                type: 'paragraph',
-                htmlText:  `<a href="${block.data.link.data.url.split('?')}" target="_blank"> LINK TO:${block.data.link.data.url.split('?')}  </a>`,
+            unifiedData.content.push({
+                type: 'link',
+                link: block.data.link.data.url.split('?')[0],
                 hidden: block.hidden
             });
         },
@@ -115,14 +114,14 @@ export default async function dtfUnify(json) {
             const htmlList =`<${block.data.type}> 
                                 ${block.data.items.map(item => `<li>${converter.makeHtml(item)}</li>`).join('')} 
                             </${block.data.type}>`;
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'paragraph',
                 htmlText: htmlList,
                 hidden: block.hidden
             });
         },
         'incut': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'quote',
                 quoteHTML: block.data.text,
                 citeHTML: '',
@@ -132,14 +131,14 @@ export default async function dtfUnify(json) {
         'header': (block) => {
             const html = document.createElement(block.data.style);
             html.innerHTML = block.data.text;
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'paragraph',
                 htmlText: html.outerHTML,
                 hidden: block.hidden
             });
         },
         'audio': (block) => {
-            unified.content.push({
+            unifiedData.content.push({
                 type: 'gallery',
                 media: getAudioContent(block.data.audio),
                 hidden: block.hidden
@@ -148,7 +147,6 @@ export default async function dtfUnify(json) {
     };
 
     data.blocks.forEach(block => {
-        console.log(block);
         dtfTypes[block.type]?.(block);
     });
 

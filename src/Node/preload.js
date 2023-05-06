@@ -43,12 +43,13 @@ async function savePost(json, folder, site) {
 
     //json -> API interface -> unified json for EFL 
     interfaces[site](json).then(unified => { 
-        if (unified.criticalError){                                                 //without save
+        if (unified.criticalError){                                                 
             alertHandler(`Пост не сохранён: ${unified.criticalError} ._.)`, 'error');
-            return;
+            return;                                                                 //without save
         }
-        unified.hash = hashString(JSON.stringify(unified.content)); //hash content | if it willn't work fast -> rewrite
-        fs.writeFile('./lib' + pathArrayToString(folder) + unified.postName + '.json', JSON.stringify(unified), (err) => {
+
+        unified.hash = hashString(JSON.stringify(unified.data));                    //hash content block
+        fs.writeFile('./lib' + pathArrayToString(folder) + unified.data.postName + '.json', JSON.stringify(unified), (err) => {
             if (err)
                 alertHandler(err.message, 'error');
             else
@@ -59,11 +60,21 @@ async function savePost(json, folder, site) {
 
 async function getFile(src, filename, type, callback) {
     const formats = {
-        utf8: (rawData) => {                                                        //json page files 
-            const readyData = JSON.parse(rawData);
-            callback(checkHash(readyData.hash, readyData.content) ? readyData : {}) //check hash and send resault
+        utf8: (rawData) => {            //json page files 
+            let readyData;
+            try {                       //try to parse
+                readyData = JSON.parse(rawData);
+            } catch(err) {              //catch corrupted json
+                readyData = {};
+            }
+            finally{
+                if (readyData?.hash && readyData?.data && checkHash(readyData.hash, readyData.data)) //check args and hash
+                    callback(readyData.data)
+                else
+                    callback({});
+            }
         },      
-        base64: (rawData) => callback(rawData.toString())                           //media files
+        base64: (rawData) => callback(rawData.toString())   //media files
     }
 
     fs.readFile('.' + pathArrayToString(src) + filename,  type, function (err, data) {
@@ -99,7 +110,50 @@ async function getSettings() {
 }
 
 async function updateSettings(config) {
-    const oldConfig = JSON.parse(fs.readFileSync('./src/View/Theming/palette.json'));
+    let oldConfig;
+    try {
+        oldConfig = JSON.parse(fs.readFileSync('./src/View/Theming/palette.json'));
+    } catch(err) {          //catch parse or read err
+        oldConfig = {       //set default config
+            "light": {
+                "mode": "light",
+                "primary": {
+                    "main": "#ffb300"
+                },
+                "background": {
+                    "card": "rgba(0, 0, 0, 0.07)"
+                },
+                "action": {
+                    "active": "#ffb300",
+                    "hover": "rgba(0, 0, 0, 0.15)"
+                },
+                "text": {
+                    "primary": "#000000"
+                }
+            },
+            "dark": {
+                "mode": "dark",
+                "primary": {
+                    "main": "#ffb300"
+                },
+                "background": {
+                    "card": "rgba(255, 255, 255, 0.07)"
+                },
+                "action": {
+                    "active": "#ffb300",
+                    "hover": "rgba(255, 255, 255, 0.16)"
+                },
+                "text": {
+                    "primary": "#fff"
+                }
+            },
+            "common": {
+                "text": {
+                    "size": "23"
+                }
+            }
+        };
+    }
     const newConfig = {...oldConfig, common: {...config}};
     fs.writeFile('./src/View/Theming/palette.json', JSON.stringify(newConfig), err => {
         if (err) alertHandler(err.message, 'error');

@@ -13,8 +13,8 @@ export async function sendRequest(postUrl, pathToSave) {
     }
 
     const supportedSites = {
-        kknights: 'https://kknights.com/api/v1/post/' + postId,
-        dtf: 'https://api.dtf.ru/v1.9/locate?' + new URLSearchParams({url: postUrl})    //FIX: get only post 
+        kknights: `https://kknights.com/api/v1/post/${postId}`,
+        dtf: `https://api.dtf.ru/v1.9/entry/locate?url=${postUrl}`
     }
 
     if (!supportedSites.hasOwnProperty(site)){                          //check API
