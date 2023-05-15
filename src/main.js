@@ -93,7 +93,7 @@ ipcMain.on('saveMedia', async (event, args) => {
 	request.on('response', response => {
 		response.on('error', (error) => mainWindow.webContents.send("handleAlert", {message: JSON.stringify(error), type: 'error'}));
 
-		let data = new Stream();
+		let data = new Stream();							//FIX IT: 404 etc
 		response.on('data', (chunk) => data.push(chunk));
 		response.on('end', () => {
 			const srcDir = path.join('./sources', args.dir);					
