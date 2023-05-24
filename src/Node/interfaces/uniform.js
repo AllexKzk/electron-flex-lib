@@ -1,7 +1,9 @@
 export const uniform = {
-    sign: 'fl-sign',
-    author: '',
-    title: '',
-    postName: '',
-    content: []
+    hash: null,
+    data : {
+        author: '',
+        title: '',
+        postName: '',
+        content: []
+    }
 };

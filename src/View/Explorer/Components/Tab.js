@@ -8,7 +8,7 @@ export default function Tab(props) {
             <Card onClick={() => props.callback(props.name)} variant="tab">
                 <CardContent variant="tab">
                     {
-                        props.isJson ? <TextSnippetIcon sx = {{fontSize: 32}} /> : <FolderIcon sx = {{fontSize: 32}} />
+                        props.isFile ? <TextSnippetIcon sx = {{fontSize: 32}} /> : <FolderIcon sx = {{fontSize: 32}} />
                     }
                     <Typography variant="h5" noWrap={true}> {props.name} </Typography>
                 </CardContent>

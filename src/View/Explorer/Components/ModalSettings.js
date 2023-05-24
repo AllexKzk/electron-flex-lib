@@ -2,7 +2,7 @@ import { Box, Button, Modal, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 
 export default function ModalSettings(props){
-    const style = { //Box cant styled from theme >_>
+    const style = {                         //Box cant styled from theme >_>
         position: 'absolute',
         display: 'flex',
         top: '50%',
@@ -34,7 +34,7 @@ export default function ModalSettings(props){
     return (
         <Modal open={props.isOpen} onClose={closeModal}>
             <Box sx={style}>
-                <TextField onChange={e => setSize(e.target.value)} label="Font size(px)" type="number" value={fontSize} />
+                <TextField onChange={e => setSize(e.target.value)} label="Размер шрифта(px)" type="number" value={fontSize} />
             </Box>
         </Modal>
     );
