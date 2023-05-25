@@ -2,7 +2,7 @@ import {Box, Container, IconButton, Typography, CircularProgress} from "@mui/mat
 import {useEffect, useState} from "react";
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
-import Spoiler from "./Spoiler";
+import Spoiler from "./Spoiler.jsx";
 
 export default function Gallery(props){
     const [index, setIndex] = useState(0);
@@ -14,6 +14,7 @@ export default function Gallery(props){
         const src = 'data:' + type + props.objects[index].filename.split('.').pop()  + ';base64,' + buffer;
         setBuf(src);
     };
+    
     useEffect(() => {
         window.electron.getFile(props.objects[index].src, props.objects[index].filename, 'base64', getMediaFromServer);
     }, [index]);
@@ -29,12 +30,12 @@ export default function Gallery(props){
     }
 
     return (
-        <Container sx={{m: 'k'}}>
+        <>
         {
             spoiler ? 
             <Spoiler openSpoiler={() => setSpoiler(false)}/>
             : 
-            <Container>
+            <Box>
                 <Box
                     display="flex"
                     justifyContent="center"
@@ -66,8 +67,8 @@ export default function Gallery(props){
                         </IconButton>
                     </Box>
                 }
-            </Container>
+            </Box>
         }
-        </Container>
+        </>
     );
 }

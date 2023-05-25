@@ -1,18 +1,18 @@
-import { Button, Container, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { useState } from "react";
-import Spoiler from "./Spoiler";
+import Spoiler from "./Spoiler.jsx";
 
 export default function Paragraph(props) {
     const [spoiler, setSpoiler] = useState(props.hidden);
 
     return (
-        <Container sx={{m: '1 0 1 0'}}>
+        <Box>
             {
                 spoiler ? 
                 <Spoiler openSpoiler={() => setSpoiler(false)}/>
                 : 
-                <Typography variant="pageText" dangerouslySetInnerHTML={{__html: props.htmlText}} />
+                <Typography dangerouslySetInnerHTML={{__html: props.htmlText}} />
             }
-        </Container>
+        </Box>
     );
 }

@@ -11,7 +11,7 @@ export default async function dtfUnify(json) {
     unifiedData.title = data.title;
     unifiedData.postName = unifiedData.title.replace(/<*>*\|*\**\.*\?*:*\\*\/*/gm, ''); //cut wrong chars for filesys
     if (!unifiedData.postName.length)                                               
-        unifiedData.postName = 'unknown';                                           //change to id
+        unifiedData.postName = 'unknown';                                        //change to id
 
     const dtfPicsSource = 'https://leonardo.osnova.io/';                        //dtf media storage
     const dtfAudioSource = 'https://leonardo2.osnova.io/audio/';                //dtf audio storage

@@ -1,7 +1,7 @@
 import {Alert, Box, Button, Modal, TextField} from "@mui/material";
 import AddIcon from '@mui/icons-material/Add';
 import {useEffect, useState} from "react";
-import { addHandler, freeHandler } from "../../../AlertHandling/HandlersCollection";
+import { addHandler } from "../../../AlertHandling/HandlersCollection";
 
 export default function ItemModal(props) {
     const style = { //Box cant styled from theme >_>

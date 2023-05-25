@@ -1,6 +1,5 @@
-import {useEffect, useState} from "react";
 import { Menu } from "@mui/material";
-import RightClickItem from "./RightClickItem";
+import RightClickItem from "./RightClickItem.jsx";
 import { getPage, addFolder } from "./ItemsFunctions";
 
 export default function RightClickMenu(props){
