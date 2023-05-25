@@ -4,7 +4,7 @@ import Brightness7Icon from '@mui/icons-material/Brightness7';
 import SettingsIcon from '@mui/icons-material/Settings';
 import {useContext, useState} from "react";
 import {themeContext} from "../../Theming/themes";
-import ModalSettings from "./ModalSettings";
+import ModalSettings from "./ModalSettings.jsx";
 
 export default function RootBar(props){
     const [open, setOpen] = useState(false);

@@ -10,14 +10,14 @@ import {useNavigate} from "react-router-dom";
 export default function Overlay(props) {
     const theme = useContext(themeContext);
     const navigate = useNavigate();
-    console.log(props.path);
     const backToFolder = () => {
         navigate('/', {
             state: {path: props.path}
         });
     };
+
     return (
-        <Box sx={{display: 'flex', justifyContent: 'space-between', m: '0 5vw 0 5vw'}}>
+        <Box style={{display: 'flex', justifyContent: 'space-between', m: '0 5vw 0 5vw'}}>
            <IconButton size={'large'} onClick={backToFolder}>
                <ArrowBackIosIcon />
            </IconButton>

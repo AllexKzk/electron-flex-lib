@@ -1,10 +1,10 @@
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Grid, Box} from "@mui/material";
 import {useLocation, useNavigate} from "react-router-dom";
-import RootBar from "./Components/RootBar";
-import RightClickMenu from "./Components/RightClickMenu/RightClickMenu";
-import Tab from "./Components/Tab"
-import { freeHandler } from "../AlertHandling/HandlersCollection";
+import RootBar from "./Components/RootBar.jsx";
+import RightClickMenu from "./Components/RightClickMenu/RightClickMenu.jsx";
+import Tab from "./Components/Tab.jsx"
+import {freeHandler} from "../AlertHandling/HandlersCollection";
 
 //EXPLORER WINDOW:
 

@@ -9,14 +9,6 @@ const defaultTheme = (mode) => {
         },
         components: {
             MuiTypography: {
-                variants: [
-                    {
-                        props: { variant: 'pageText' },
-                        style: {
-                            fontSize: `${palette.common.text.size}px`,
-                        },
-                    },
-                ],
                 styleOverrides: {
                     root: {
                         color: palette[mode].text.primary

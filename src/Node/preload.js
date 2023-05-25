@@ -34,21 +34,22 @@ function getFolders(root) {
 }
 
 async function sendRequestFromServer(url, pathToSave, site) {
-    ipcRenderer.on('getRes', (event, args) => savePost(args, pathToSave, site));    //set response handler
-    ipcRenderer.send('sendReq', {url: url});                                        //send request
+    ipcRenderer.on('getRes', (event, args) => savePost(args, pathToSave, site, url));   //set response handler
+    ipcRenderer.send('sendReq', {url: url});                                            //send request
 }
 
-async function savePost(json, folder, site) {
-    ipcRenderer.removeAllListeners('getRes');                                       //remove response handler
+async function savePost(json, folder, site, url) {
+    ipcRenderer.removeAllListeners('getRes');                                           //remove response handler
 
     //json -> API interface -> unified json for EFL 
     interfaces[site](json).then(unified => { 
         if (unified.criticalError){                                                 
             alertHandler(`Пост не сохранён: ${unified.criticalError} ._.)`, 'error');
-            return;                                                                 //without save
+            return;                                                                     //without save
         }
 
-        unified.hash = hashString(JSON.stringify(unified.data));                    //hash content block
+        unified.hash = hashString(JSON.stringify(unified.data));                        //hash content block
+        unified.link = url;                                                             //link to origin
         fs.writeFile('./lib' + pathArrayToString(folder) + unified.data.postName + '.json', JSON.stringify(unified), (err) => {
             if (err)
                 alertHandler(err.message, 'error');
@@ -148,6 +149,7 @@ async function updateSettings(config) {
                 }
             },
             "common": {
+                "mode": "dark",
                 "text": {
                     "size": "23"
                 }

@@ -1,9 +1,10 @@
 import {Divider, Typography, Container} from "@mui/material";
-import Gallery from "./Blocks/Gallery";
-import Embed from "./Blocks/Embed";
-import Quote from "./Blocks/Quote";
-import Paragraph from "./Blocks/Paragraph";
-import SimpleLink from "./Blocks/SimpleLink";
+import Gallery from "./Blocks/Gallery.jsx";
+import Embed from "./Blocks/Embed.jsx";
+import Quote from "./Blocks/Quote.jsx";
+import Paragraph from "./Blocks/Paragraph.jsx";
+import SimpleLink from "./Blocks/SimpleLink.jsx";
+
 
 export function viewtify(json) {
     let viewElement = [];
@@ -17,7 +18,7 @@ export function viewtify(json) {
     viewElement.push(
         <>
             <Typography variant={'h2'}> {json?.title} </Typography>
-            <Typography fontStyle={'italic'} >Автор: {json.author}</Typography>
+            <Typography fontStyle={'italic'}> Автор: {json.author}</Typography>
         </>
     );
 
@@ -30,7 +31,7 @@ export function viewtify(json) {
                                     <Paragraph htmlText={block.htmlText} hidden={block.hidden} />
                                     <Gallery objects={block.media} hidden={block.hidden} />
                                 </>,
-        divider: (block) => <Container sx={{m: '2vh 0 2vh 0'}}>
+        divider: (block) => <Container>
                                 <Divider/>
                             </Container>,
         quote: (block) => <Quote quote={block.quoteHTML} cite={block.citeHTML} hidden={block.hidden} />,
