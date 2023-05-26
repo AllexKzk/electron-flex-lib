@@ -11,7 +11,7 @@ export default function Paragraph(props) {
                 spoiler ? 
                 <Spoiler openSpoiler={() => setSpoiler(false)}/>
                 : 
-                <Typography dangerouslySetInnerHTML={{__html: props.htmlText}} />
+                <Typography fontSize="inherit" dangerouslySetInnerHTML={{__html: props.htmlText}} />
             }
         </Box>
     );

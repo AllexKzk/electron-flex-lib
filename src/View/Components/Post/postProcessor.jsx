@@ -18,7 +18,7 @@ export function viewtify(json) {
     viewElement.push(
         <>
             <Typography variant={'h2'}> {json?.title} </Typography>
-            <Typography fontStyle={'italic'}> Автор: {json.author}</Typography>
+            <Typography fontStyle={'italic'}> Автор: {json.author} </Typography>
         </>
     );
 

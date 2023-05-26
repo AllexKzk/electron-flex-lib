@@ -1,5 +1,5 @@
 import {MenuItem} from "@mui/material";
-import ItemModal from "./ItemModal.jsx";
+import ItemModal from "../Modal/ItemModal.jsx";
 import {useState} from "react";
 
 export default function RightClickItem(props){

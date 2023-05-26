@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-import { uniform } from "./uniform";
+import uniform from "./uniform.json";
 
 export default async function kknightsUnify(json) {
     let unified = structuredClone(uniform);
@@ -8,8 +8,6 @@ export default async function kknightsUnify(json) {
     unifiedData.author = json.user.username;
     unifiedData.title = json.title;
     unifiedData.postName = unifiedData.title.replace(/<*>*\|*\**\.*\?*:*\\*\/*/gm, ''); //cut wrong chars for filesys
-    if (!unifiedData.postName.length)                                               
-        unifiedData.postName = 'unknown';                                               //FIX IT: change to id
     unifiedData.content = [];
 
     const getMediaContent = (content) => {
@@ -77,7 +75,7 @@ export default async function kknightsUnify(json) {
     }
 
     for (let block of json.content){
-        blockTypes[block.block](block);
+        blockTypes[block.block]?.(block);
     }
 
     return unified;

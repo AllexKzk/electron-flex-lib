@@ -1,8 +1,8 @@
 import {useLocation} from 'react-router-dom';
 import React, {useEffect, useState} from "react";
-import {viewtify} from "./fileWorker.jsx";
-import {Container, Box} from "@mui/material";
-import Overlay from "./Overlay.jsx";
+import {viewtify} from "../Components/Post/postProcessor.jsx";
+import {Container, Box, Paper, Typography} from "@mui/material";
+import Overlay from "../Components/Post/Overlay.jsx";
 
 export default function Page() {
     const [data, setData] = useState(null);
@@ -39,7 +39,7 @@ export default function Page() {
             {data &&
                 <>
                     <Overlay path={location.state.src} source={data.postName}/>
-                    <Container sx={{fontSize: `${fontSize}px`}}>
+                    <Container sx={{fontSize: `${fontSize}px`, paddingBottom: 2}}>
                         {
                             viewtify(data).map( (block) =>  <Box m={2}>
                                                                 {block}

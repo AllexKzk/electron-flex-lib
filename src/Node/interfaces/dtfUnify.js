@@ -1,6 +1,6 @@
 const { ipcRenderer } = require('electron'),
 showdown  = require('showdown');
-import { uniform } from "./uniform";
+import uniform from "./uniform.json";
 
 export default async function dtfUnify(json) {
     let unified = structuredClone(uniform);
@@ -8,10 +8,8 @@ export default async function dtfUnify(json) {
     const data = json.result;
 
     unifiedData.author = data.author.name;
-    unifiedData.title = data.title;
-    unifiedData.postName = unifiedData.title.replace(/<*>*\|*\**\.*\?*:*\\*\/*/gm, ''); //cut wrong chars for filesys
-    if (!unifiedData.postName.length)                                               
-        unifiedData.postName = 'unknown';                                        //change to id
+    unifiedData.title = data.title.length ? data.title : 'untitled';
+    unifiedData.postName =`${unifiedData.title.replace(/<*>*\|*\**\.*\?*:*\\*\/*/gm, '')}`; //cut wrong chars for filesys
 
     const dtfPicsSource = 'https://leonardo.osnova.io/';                        //dtf media storage
     const dtfAudioSource = 'https://leonardo2.osnova.io/audio/';                //dtf audio storage

@@ -2,8 +2,8 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import SaveIcon from '@mui/icons-material/Save';
-import {IconButton} from "@mui/material";
-import {themeContext} from "../Theming/themes";
+import {Button, IconButton} from "@mui/material";
+import {themeContext} from "../../Theming/themes";
 import {useContext, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
@@ -42,7 +42,7 @@ export default function Overlay(props) {
         <div 
             onMouseEnter={() => {blockRef.current.style.top = 0}} 
             onMouseLeave={() => {blockRef.current.style.top = scrollYPos ? '-50px' : '0'}}
-            style={{position: 'fixed', width: '100%', height: '50px'}}>
+            style={{position: 'fixed', top: 0, width: '100%', height: '50px'}}>
                 <div ref={blockRef} style={{top: 0, position: 'fixed', width: '100%', transitionDuration: '500ms', display: 'flex', justifyContent: 'space-between'}}>
                     <IconButton size={'large'} onClick={backToFolder}>
                         <ArrowBackIosIcon />

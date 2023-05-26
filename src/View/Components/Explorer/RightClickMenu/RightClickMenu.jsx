@@ -1,6 +1,6 @@
 import { Menu } from "@mui/material";
 import RightClickItem from "./RightClickItem.jsx";
-import { getPage, addFolder } from "./ItemsFunctions";
+import { getPage, addFolder } from "./ItemsFunctions.js";
 
 export default function RightClickMenu(props){
 
