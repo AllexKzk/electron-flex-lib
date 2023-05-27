@@ -15,7 +15,8 @@ function pathArrayToString(array) {
 }
 
 function getFolders(root) {
-    const lib = path.resolve('./lib' + pathArrayToString(root));
+    const lib = path.resolve(`./lib${pathArrayToString(root)}`);
+    
     if (!fs.existsSync(lib)){                                           //if ./lib doesn't exist
         fs.mkdir(lib, err => {                                          //create it
             if (err)
@@ -48,9 +49,9 @@ async function savePost(json, folder, site, url) {
             return;                                                                     //without save
         }
 
-        unified.hash = hashString(JSON.stringify(unified.data));                        //hash content block
+        unified.hash = hashString(JSON.stringify(unified.data));               //hash content block
         unified.link = url;                                                             //link to origin
-        fs.writeFile('./lib' + pathArrayToString(folder) + unified.data.postName + '.json', JSON.stringify(unified), (err) => {
+        fs.writeFile('./lib' + pathArrayToString(folder) + unified.data.postName + '.json', JSON.stringify(unified, null, 2), (err) => {
             if (err)
                 alertHandler(err.message, 'error');
             else
@@ -106,62 +107,6 @@ async function openSource(postName){
     spawn('open', [path.join('./sources', postName)]);
 }
 
-async function getSettings() {
-    return JSON.parse(fs.readFileSync('./src/View/Theming/palette.json')).common;
-}
-
-async function updateSettings(config) {
-    let oldConfig;
-    try {
-        oldConfig = JSON.parse(fs.readFileSync('./src/View/Theming/palette.json'));
-    } catch(err) {          //catch parse or read err
-        oldConfig = {       //set default config
-            "light": {
-                "mode": "light",
-                "primary": {
-                    "main": "#ffb300"
-                },
-                "background": {
-                    "card": "rgba(0, 0, 0, 0.07)"
-                },
-                "action": {
-                    "active": "#ffb300",
-                    "hover": "rgba(0, 0, 0, 0.15)"
-                },
-                "text": {
-                    "primary": "#000000"
-                }
-            },
-            "dark": {
-                "mode": "dark",
-                "primary": {
-                    "main": "#ffb300"
-                },
-                "background": {
-                    "card": "rgba(255, 255, 255, 0.07)"
-                },
-                "action": {
-                    "active": "#ffb300",
-                    "hover": "rgba(255, 255, 255, 0.16)"
-                },
-                "text": {
-                    "primary": "#fff"
-                }
-            },
-            "common": {
-                "mode": "dark",
-                "text": {
-                    "size": "23"
-                }
-            }
-        };
-    }
-    const newConfig = {...oldConfig, common: {...config}};
-    fs.writeFile('./src/View/Theming/palette.json', JSON.stringify(newConfig), err => {
-        if (err) alertHandler(err.message, 'error');
-    });
-}
-
 async function setAlertHandler(handler) {
     alertHandler = handler;                                                             //preload handler
     ipcRenderer.on('handleAlert', (event, args) => handler(args.message, args.type));   //ipcMain handler
@@ -173,7 +118,5 @@ contextBridge.exposeInMainWorld('electron', {
     sendRequestFromServer: async (url, pathToSave, site) => sendRequestFromServer(url, pathToSave, site),       //call ipcMain to send request
     createDir: async (path, name) => createDir(path, name),                                                     //create dit with name by path
     openSource: async (postName) => openSource(postName),                                                       //open folder with sources
-    getSettings: () => getSettings(),                                                                           //get palette settings from json
-    updateSettings: async (config) => updateSettings(config),                                                   //update settings in json
     setAlertHandler: async (handler) => setAlertHandler(handler)                                                //callTopHandler
 });

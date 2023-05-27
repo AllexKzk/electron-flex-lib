@@ -71,6 +71,7 @@ const defaultTheme = (mode) => {
                     {
                         props: { variant: 'quote' },
                         style: {
+                            display: 'flex',
                             flexDirection: 'column', 
                             borderLeft: 'solid', 
                             borderColor: palette[mode].text.primary, 

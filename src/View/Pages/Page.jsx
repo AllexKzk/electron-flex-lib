@@ -1,7 +1,7 @@
 import {useLocation} from 'react-router-dom';
-import React, {useEffect, useState} from "react";
-import {viewtify} from "../Components/Post/postProcessor.jsx";
+import React, {Suspense, useEffect, useState} from "react";
 import {Container, Box, Paper, Typography} from "@mui/material";
+import Post from '../Components/Post/postProcessor.jsx';
 import Overlay from "../Components/Post/Overlay.jsx";
 
 export default function Page() {
@@ -22,7 +22,7 @@ export default function Page() {
     }, [fontSize]);
 
     const handleKey = (e) => {
-        if (fontSize && e.ctrlKey){ //if ctrl pressed
+        if (fontSize && e.ctrlKey){ //if key pressed with ctrl
             switch(e.key){
                 case '=':
                     setSize(fontSize + 1);
@@ -40,11 +40,7 @@ export default function Page() {
                 <>
                     <Overlay path={location.state.src} source={data.postName}/>
                     <Container sx={{fontSize: `${fontSize}px`, paddingBottom: 2}}>
-                        {
-                            viewtify(data).map( (block) =>  <Box m={2}>
-                                                                {block}
-                                                            </Box>)
-                        }
+                        <Post json={data} />
                     </Container>
                 </>
             }

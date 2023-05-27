@@ -141,11 +141,16 @@ export default async function dtfUnify(json) {
                 media: getAudioContent(block.data.audio),
                 hidden: block.hidden
             });
+        },
+        'raw': (block) => {
+            unifiedData.content.push({
+                rawBlock: block
+            });
         }
     };
 
     data.blocks.forEach(block => {
-        dtfTypes[block.type]?.(block);
+        dtfTypes[dtfTypes.hasOwnProperty(block.type) ? block.type : 'raw'](block);
     });
 
     return unified;

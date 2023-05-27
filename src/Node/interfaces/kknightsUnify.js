@@ -72,11 +72,14 @@ export default async function kknightsUnify(json) {
             citeHTML: block.json.cite,
             hidden: false
         }),
+        raw: (block) => unifiedData.content.push({
+            rawBlock: block
+        }),
     }
 
-    for (let block of json.content){
-        blockTypes[block.block]?.(block);
-    }
+    json.content.forEach(block => {
+        blockTypes[blockTypes.hasOwnProperty(block.block) ? block.block : 'raw'](block);
+    });
 
     return unified;
 }

@@ -1,13 +1,14 @@
-import {Divider, Typography, Container} from "@mui/material";
+import {Box, Divider, Typography, Container} from "@mui/material";
 import Gallery from "./Blocks/Gallery.jsx";
 import Embed from "./Blocks/Embed.jsx";
 import Quote from "./Blocks/Quote.jsx";
 import Paragraph from "./Blocks/Paragraph.jsx";
 import SimpleLink from "./Blocks/SimpleLink.jsx";
 
+export default function Post(props) {
 
-export function viewtify(json) {
     let viewElement = [];
+    const json = props.json;
 
     if (!json || !Object.keys(json).length){ //if json is void
         viewElement.push(<Typography> {'Похоже файл повреждён *~*'} </Typography>);
@@ -36,6 +37,16 @@ export function viewtify(json) {
                             </Container>,
         quote: (block) => <Quote quote={block.quoteHTML} cite={block.citeHTML} hidden={block.hidden} />,
     };
-    json.content.forEach( block => viewElement.push(blockTypes[block.type](block)) );
-    return viewElement;
+    json.content.forEach( block => viewElement.push(blockTypes[block.type]?.(block)) );
+
+    return (
+        <>
+        {
+            viewElement.map((block) =>    
+                <Box  m={2}>
+                    {block}
+                </Box>)
+        }
+        </>
+    );
 }
