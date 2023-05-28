@@ -50,7 +50,7 @@ async function savePost(json, folder, site, url) {
         }
 
         unified.hash = hashString(JSON.stringify(unified.data));               //hash content block
-        unified.link = url;                                                             //link to origin
+        unified.link = url;                                                    //link to origin
         fs.writeFile('./lib' + pathArrayToString(folder) + unified.data.postName + '.json', JSON.stringify(unified, null, 2), (err) => {
             if (err)
                 alertHandler(err.message, 'error');

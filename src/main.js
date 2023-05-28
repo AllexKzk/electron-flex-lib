@@ -7,31 +7,30 @@ if (require('electron-squirrel-startup')) {
 
 let mainWindow;
 const createWindow = () => {
+	mainWindow = new BrowserWindow({
+		width: 800,
+		height: 600,
+		webPreferences: {
+			nodeIntegration: true,
+			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+		},
+		icon: './assets/icon.ico'
+	});
 
-  mainWindow = new BrowserWindow({
-	width: 800,
-	height: 600,
-	webPreferences: {
-		nodeIntegration: true,
-		preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
-	},
-	icon: './assets/icon.ico'
-  });
+	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+	mainWindow.removeMenu();
 
-  mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-  mainWindow.removeMenu();
+	//DEV: mainWindow.webContents.openDevTools({ mode: 'detach' });
 
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
-
-  mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
-    callback({
-      responseHeaders: {
-        ...details.responseHeaders,
-        "Content-Security-Policy": [ "connect-src 'self' https://*;" ]
-      },
-    });
-  });
-  requests(mainWindow);
+	mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
+		callback({
+		responseHeaders: {
+			...details.responseHeaders,
+			"Content-Security-Policy": [ "connect-src 'self' https://*;" ]
+		},
+		});
+	});
+	requests(mainWindow);
 };
 
 app.on('ready', createWindow);
