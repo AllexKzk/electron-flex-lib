@@ -3,7 +3,8 @@ import {interfaces} from "./interfaces/interfaces";
 const { contextBridge, ipcRenderer } = require('electron');
 const fs = require("fs");
 const path = require("path");
-const { spawn } = require('child_process');
+const { exec, spawn } = require('child_process');
+require('dotenv').config();
 let alertHandler = null;
 
 function pathArrayToString(array) {
@@ -104,7 +105,13 @@ async function createDir(path, name){
 }
 
 async function openSource(postName){
-    spawn('open', [path.join('./sources', postName)]);
+    //WIN:
+    if (process.env.PLATFORM === 'win')
+        exec(`start %windir%\\explorer.exe "${path.join('.\\sources\\', postName)}"`);
+    else if (process.env.PLATFORM === 'linux')
+        spawn('open', [path.join('./sources', postName)]);
+    else
+        throw new Error('Undefined PLATFORM .env variable: win/linux');
 }
 
 async function setAlertHandler(handler) {

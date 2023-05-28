@@ -20,7 +20,8 @@ const createWindow = () => {
 	mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 	mainWindow.removeMenu();
 
-	//DEV: mainWindow.webContents.openDevTools({ mode: 'detach' });
+	if (process.env.NODE_ENV === 'development')
+		mainWindow.webContents.openDevTools({ mode: 'detach' });
 
 	mainWindow.webContents.session.webRequest.onHeadersReceived((details, callback) => {
 		callback({

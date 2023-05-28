@@ -1,8 +1,23 @@
+require('dotenv').config();
+
 module.exports = {
   packagerConfig: {
     icon: __dirname + '/assets/icon.ico'
   },
   rebuildConfig: {},
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      authToken: process.env.GITHUB_TOKEN,
+      config: {
+        repository: {
+          owner: 'AllexKzk',
+          name: 'electron-flex-lib'
+        },
+        prerelease: true
+      }
+    }
+  ],
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
