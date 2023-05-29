@@ -105,7 +105,6 @@ async function createDir(path, name){
 }
 
 async function openSource(postName){
-    //WIN:
     if (process.env.PLATFORM === 'win')
         exec(`start %windir%\\explorer.exe "${path.join('.\\sources\\', postName)}"`);
     else if (process.env.PLATFORM === 'linux')

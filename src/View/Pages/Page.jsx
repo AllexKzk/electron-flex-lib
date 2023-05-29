@@ -1,28 +1,25 @@
 import {useLocation} from 'react-router-dom';
-import React, {Suspense, useEffect, useState} from "react";
-import {Container, Box, Paper, Typography} from "@mui/material";
+import React, {useEffect, useState} from "react";
+import {Container} from "@mui/material";
 import Post from '../Components/Post/postProcessor.jsx';
 import Overlay from "../Components/Post/Overlay.jsx";
 
+//Post page:
 export default function Page() {
-    const [data, setData] = useState(null);
+    const [postContent, setPostContent] = useState(null);
     const location = useLocation();
-    const  src = ['lib/'].concat(location.state.src);
+    const src = ['lib/'].concat(location.state.src);
 
     const [fontSize, setSize] = useState(parseInt(localStorage.getItem('fontSize')) || 20);
 
     useEffect(() => {
-        window.electron.getFile(src, location.state.file, 'utf8', setData);
-        document.addEventListener('keydown', handleKey); //handle resize font
+        window.electron.getFile(src, location.state.file, 'utf8', setPostContent);
+        localStorage.setItem('fontSize', fontSize);
+    }, []);
 
-        localStorage.setItem('fontSize', fontSize); //store locally
-        return () => {
-            document.removeEventListener('keydown', handleKey);
-        };
-    }, [fontSize]);
-
+    //handle resize font:
     const handleKey = (e) => {
-        if (fontSize && e.ctrlKey){ //if key pressed with ctrl
+        if (fontSize && e.ctrlKey){                 //if key pressed with ctrl
             switch(e.key){
                 case '=':
                     setSize(fontSize + 1);
@@ -32,15 +29,19 @@ export default function Page() {
                     break;
             }
         }
-    }
+    };
+    useEffect(() => {
+        document.addEventListener('keydown', handleKey);
+        return () => document.removeEventListener('keydown', handleKey);
+    }, [fontSize]);
 
     return (
         <>
-            {data &&
+            {postContent &&
                 <>
-                    <Overlay path={location.state.src} source={data.postName}/>
+                    <Overlay path={location.state.src} source={postContent.postName}/>
                     <Container sx={{fontSize: `${fontSize}px`, paddingBottom: 2}}>
-                        <Post json={data} />
+                        <Post json={postContent} />
                     </Container>
                 </>
             }

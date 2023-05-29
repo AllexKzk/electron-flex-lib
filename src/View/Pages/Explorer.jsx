@@ -7,16 +7,15 @@ import Tab from "../Components/Explorer/Tab.jsx"
 import {freeHandler} from "../AlertHandling/HandlersCollection.js";
 
 //EXPLORER WINDOW:
-
 export default function Explorer() { 
-    const initPath = useLocation().state ? useLocation().state.path : []; //useLocation() - if we came from Page
-    const [path, setPath] = useState(initPath);                           //current directory
-    const folders = window.electron.getFolders(path);                     //get folders with NodeJS
+    const initPath = useLocation().state ? useLocation().state.path : [];   //useLocation() - if we came from Page
+    const [path, setPath] = useState(initPath);                             //current directory
+    const folders = window.electron.getFolders(path);                       //get folders with NodeJS
     
-    const navigate = useNavigate();                                         
+    const navigate = useNavigate();                           
     const changeFolder = (newPath) => {
         if ("json" === newPath.split('.').pop())
-            navigate('/file', { state: {src: path, file: newPath}});    //go to Page with state
+            navigate('/file', { state: {src: path, file: newPath} });   //go to Page with state
         else
             setPath(path.concat(newPath));                              //change folder
     };
@@ -36,7 +35,7 @@ export default function Explorer() {
             <RootBar setter={setPath} getter={path}/>
             <Box onContextMenu={handleContextMenu} minHeight={'90vh'}>
                 <Grid container spacing={2} sx = {{m: 'auto', maxWidth: '100%'}}>
-                    {folders.map( (folder) => <Tab 
+                    {folders.map( (folder) => <Tab
                                                 callback={changeFolder} 
                                                 isFile={folder.isFile} 
                                                 key={folder.name + '_folder_key'} 

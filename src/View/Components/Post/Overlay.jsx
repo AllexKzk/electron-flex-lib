@@ -7,25 +7,21 @@ import {themeContext} from "../../Theming/themes";
 import {useContext, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
 
-
-//all startup's money went to sliding buttons:
 export default function Overlay(props) {
     const theme = useContext(themeContext);
     const [scrollYPos, setScrollYPos] = useState(0);
     const blockRef = useRef();
 
+    //all startup's money went to sliding buttons:
     useEffect(() => {
         document.addEventListener('scroll', handleScroll);
-        return () => {
-            document.removeEventListener('scroll', handleScroll);
-        };
+        return () => document.removeEventListener('scroll', handleScroll);
     }, []);
 
     const handleScroll = (e) => {
         const yPos = window.pageYOffset;
-        if (yPos >= scrollYPos){    //hide if scroll down
+        if (yPos >= scrollYPos)     //hide if scroll down
             blockRef.current.style.top = '-50px';
-        }
         if (!yPos)                  //show on top
             blockRef.current.style.top = '0';
         setScrollYPos(yPos);
@@ -33,7 +29,7 @@ export default function Overlay(props) {
 
     const navigate = useNavigate();
     const backToFolder = () => {
-        navigate('/', {         //return to explorer
+        navigate('/', {             //return to the Explorer
             state: {path: props.path}
         });
     };

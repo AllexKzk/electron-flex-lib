@@ -98,3 +98,6 @@ sources/
 #cert:
 *.key
 *.out.pfx
+
+#build folder:
+builds/

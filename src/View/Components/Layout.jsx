@@ -1,6 +1,6 @@
 import {Outlet} from "react-router-dom";
 import AlertSnackbar from "../AlertHandling/AlertSnackbar.jsx";
-import {AppBar, Box, Container, CssBaseline} from '@mui/material';
+import {Box, CssBaseline} from '@mui/material';
 import {ThemeProvider} from "@mui/material/styles";
 import {themeContext, darkTheme, lightTheme} from "../Theming/themes.js";
 import React, {useContext, useEffect, useState} from "react";

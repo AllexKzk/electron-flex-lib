@@ -2,6 +2,7 @@ import {createTheme} from "@mui/material/styles";
 import {createContext} from "react";
 import palette from './palette.json'
 
+//custom themes variants:
 const defaultTheme = (mode) => {
     return {
         palette: {

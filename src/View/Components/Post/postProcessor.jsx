@@ -5,6 +5,7 @@ import Quote from "./Blocks/Quote.jsx";
 import Paragraph from "./Blocks/Paragraph.jsx";
 import SimpleLink from "./Blocks/SimpleLink.jsx";
 
+//process post's json:
 export default function Post(props) {
 
     let viewElement = [];
@@ -15,7 +16,7 @@ export default function Post(props) {
         return viewElement;
     }
 
-    //everything other seems to be good
+    //everything other seems to be good:
     viewElement.push(
         <>
             <Typography variant={'h2'}> {json?.title} </Typography>
@@ -23,19 +24,19 @@ export default function Post(props) {
         </>
     );
 
-    const blockTypes = {
-        paragraph: (block) => <Paragraph htmlText={block.htmlText} hidden={block.hidden} />,
-        gallery: (block) => <Gallery objects={block.media} hidden={block.hidden} />,
-        embed: (block) => <Embed src={block.src} supported={block.isSupported} url={block?.url} />,
+    const blockTypes = {    //supported blocks
+        paragraph: (block) => <Paragraph htmlText={block.htmlText} hidden={block.hidden}/>,
+        gallery: (block) => <Gallery objects={block.media} hidden={block.hidden}/>,
+        embed: (block) => <Embed src={block.src} supported={block.isSupported} url={block?.url}/>,
         link : (block) => <SimpleLink link={block.link} hidden={block.hidden}/>,
         sideGallery: (block) => <>
-                                    <Paragraph htmlText={block.htmlText} hidden={block.hidden} />
-                                    <Gallery objects={block.media} hidden={block.hidden} />
+                                    <Paragraph htmlText={block.htmlText} hidden={block.hidden}/>
+                                    <Gallery objects={block.media} hidden={block.hidden}/>
                                 </>,
         divider: (block) => <Container>
                                 <Divider/>
                             </Container>,
-        quote: (block) => <Quote quote={block.quoteHTML} cite={block.citeHTML} hidden={block.hidden} />,
+        quote: (block) => <Quote quote={block.quoteHTML} cite={block.citeHTML} hidden={block.hidden}/>,
     };
     json.content.forEach( block => viewElement.push(blockTypes[block.type]?.(block)) );
 
@@ -43,7 +44,7 @@ export default function Post(props) {
         <>
         {
             viewElement.map((block) =>    
-                <Box  m={2}>
+                <Box m={2}>
                     {block}
                 </Box>)
         }
