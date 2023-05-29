@@ -8,12 +8,13 @@ module.exports = {
   publishers: [
     {
       name: '@electron-forge/publisher-github',
-      authToken: process.env.GITHUB_TOKEN,
+      platforms: ['win32', 'linux'],
       config: {
         repository: {
           owner: 'AllexKzk',
           name: 'electron-flex-lib'
         },
+        authToken: process.env.GITHUB_TOKEN,
         prerelease: true
       }
     }
@@ -21,6 +22,7 @@ module.exports = {
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
+      platforms: ['win32'],
       config: {
         iconUrl: __dirname + '/assets/icon.ico',
         setupIcon: __dirname + '/assets/icon.ico',
