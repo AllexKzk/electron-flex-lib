@@ -35,16 +35,16 @@ function getFolders(root) {
     return folders;
 }
 
-async function sendRequestFromServer(url, pathToSave, site) {
-    ipcRenderer.on('getRes', (event, args) => savePost(args, pathToSave, site, url));   //set response handler
+async function sendRequestFromServer(url, pathToSave, site, loadParams) {
+    ipcRenderer.on('getRes', (event, args) => savePost(args, pathToSave, site, url, loadParams));   //set response handler
     ipcRenderer.send('sendReq', {url: url});                                            //send request
 }
 
-async function savePost(json, folder, site, url) {
+async function savePost(json, folder, site, url, loadParams) {
     ipcRenderer.removeAllListeners('getRes');                                           //remove response handler
 
     //json -> API interface -> unified json for EFL 
-    interfaces[site](json).then(unified => { 
+    interfaces[site](json, loadParams).then(unified => { 
         if (unified.criticalError){                                                 
             alertHandler(`Пост не сохранён: ${unified.criticalError} ._.)`, 'error');
             return;                                                                     //without save
@@ -121,7 +121,7 @@ async function setAlertHandler(handler) {
 contextBridge.exposeInMainWorld('electron', {
     getFolders: (root) => getFolders(root),                                                                     //open folder by path: ./lib/ + root
     getFile: async (src, filename, type, callback) => getFile(src, filename, type, callback),                   //get Page json
-    sendRequestFromServer: async (url, pathToSave, site) => sendRequestFromServer(url, pathToSave, site),       //call ipcMain to send request
+    sendRequestFromServer: async (url, pathToSave, site, loadParams) => sendRequestFromServer(url, pathToSave, site, loadParams),       //call ipcMain to send request
     createDir: async (path, name) => createDir(path, name),                                                     //create dit with name by path
     openSource: async (postName) => openSource(postName),                                                       //open folder with sources
     setAlertHandler: async (handler) => setAlertHandler(handler)                                                //callTopHandler

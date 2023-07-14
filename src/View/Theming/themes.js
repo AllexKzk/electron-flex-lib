@@ -16,6 +16,16 @@ const defaultTheme = (mode) => {
                     }
                 }
             },
+            MuiInput: {
+                variants: [
+                    {
+                        props: {variant: 'folder'},
+                        style: {
+                            outline: 'none',
+                        }
+                    }
+                ]
+            },
             MuiCardContent: {
                 variants: [
                     {

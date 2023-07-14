@@ -1,7 +1,7 @@
-import { Box, Modal, TextField, Typography } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, Modal, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 
-export default function ModalSettings(props){
+export default function ModalSettings(props) {
     const style = {                         //Box cant styled from theme >_>
         position: 'absolute',
         display: 'flex',
@@ -16,17 +16,24 @@ export default function ModalSettings(props){
     };
 
     const [fontSize, setSize] = useState(localStorage.getItem('fontSize') || 20); //def value is 20px
-
+    const [isDownloadMedia, setDownloadMedia] = useState(localStorage.getItem('isDownloadMedia') === 'true');
     const closeModal = () => {
         props.handleClose(false);
         if (fontSize > 0)
             localStorage.setItem('fontSize', fontSize);
+        localStorage.setItem('isDownloadMedia', isDownloadMedia);
     }
 
     return (
         <Modal open={props.isOpen} onClose={closeModal}>
             <Box sx={style}>
                 <TextField onChange={e => setSize(e.target.value)} label="Размер шрифта(px)" type="number" value={fontSize} />
+                <FormControlLabel 
+                    control={<Checkbox checked={isDownloadMedia} 
+                                onChange={() => setDownloadMedia(!isDownloadMedia)} 
+                            />} 
+                    label="Скачивать медиа"
+                />
                 <Box sx={{marginTop: 4, textAlign: 'center'}}>
                     <Typography variant="caption">
                         CREATED BY: ALLEX KZK <br/>

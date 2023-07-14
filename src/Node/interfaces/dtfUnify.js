@@ -2,7 +2,7 @@ const { ipcRenderer } = require('electron'),
 showdown  = require('showdown');
 import uniform from "./uniform.json";
 
-export default async function dtfUnify(json) {
+export default async function dtfUnify(json, loadParams) {
     let unified = structuredClone(uniform);
     let unifiedData = unified.data;
     const data = json.result;
@@ -59,11 +59,13 @@ export default async function dtfUnify(json) {
             });
         },
         'media': (block) => {
-            unifiedData.content.push({
-                type: 'gallery',
-                media: getMediaContent(block.data.items),
-                hidden: block.hidden
-            });
+            if (loadParams.isDownloadMedia) {
+                unifiedData.content.push({
+                    type: 'gallery',
+                    media: getMediaContent(block.data.items),
+                    hidden: block.hidden
+                });
+            }
         },
         'quote': (block) => {
             unifiedData.content.push({
@@ -136,11 +138,13 @@ export default async function dtfUnify(json) {
             });
         },
         'audio': (block) => {
-            unifiedData.content.push({
-                type: 'gallery',
-                media: getAudioContent(block.data.audio),
-                hidden: block.hidden
-            });
+            if (loadParams.isDownloadMedia) {
+                unifiedData.content.push({
+                    type: 'gallery',
+                    media: getAudioContent(block.data.audio),
+                    hidden: block.hidden
+                });
+            }
         },
         'raw': (block) => {
             unifiedData.content.push({

@@ -2,9 +2,9 @@ import kknightsUnify from './kknightsUnify';
 import dtfUnify from './dtfUnify';
 
 export const interfaces = {
-    kknights: async (data) => await kknightsUnify(data),
-    dtf: async (data) => await dtfUnify(data),
-    vc: async (data) => await dtfUnify(data) //the same API (•ᴗ•,,)
+    kknights: async (data, loadParams) => await kknightsUnify(data, loadParams),
+    dtf: async (data, loadParams) => await dtfUnify(data, loadParams),
+    vc: async (data, loadParams) => await dtfUnify(data, loadParams) //the same API (•ᴗ•,,)
 };
 
 

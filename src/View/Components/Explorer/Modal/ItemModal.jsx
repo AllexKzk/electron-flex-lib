@@ -22,8 +22,11 @@ export default function ItemModal(props) {
 
     useEffect(() => {
         setOpen(props.isOpen);
-        addHandler(setAlert);
-    });
+        if (props.isOpen){
+            addHandler(setAlert);
+            console.log('set')
+        }
+    }, [props.isOpen]);
 
     useEffect(() => {
         if (alert?.type === 'success')
@@ -31,7 +34,15 @@ export default function ItemModal(props) {
     }, [alert]);
 
     const clicked = async() => {
+        console.log(input, props.path);
         props.callback(input, props.path);
+    }
+
+    const handleEnter = (ev) => {
+        if (ev.key === 'Enter'){
+            ev.preventDefault();
+            clicked();
+        }
     }
 
     return (
@@ -42,9 +53,11 @@ export default function ItemModal(props) {
             <Box sx={style}>
                 <Box display={'flex'} >
                     <TextField
+                                autoFocus
+                                onKeyUp={(ev) => handleEnter(ev)}
                                 value={input} 
                                 label={props.label} 
-                                variant="outlined" 
+                                variant="outlined"
                                 onChange={e => setInput(e.target.value)} 
                     />
                     <Button variant="outlined" onClick={clicked}>

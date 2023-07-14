@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 import uniform from "./uniform.json";
 
-export default async function kknightsUnify(json) {
+export default async function kknightsUnify(json, loadParams) {
     let unified = structuredClone(uniform);
     let unifiedData = unified.data;
 
@@ -16,16 +16,18 @@ export default async function kknightsUnify(json) {
             const saveDir = unifiedData.postName;
             const filename = img.url.split('/').pop();
             ipcRenderer.send('saveMedia', {url: img.url, dir: saveDir, filename: filename});
-            media.push(
-                {
-                    src: ['sources', unifiedData.postName],
-                    filename: filename,
-                    type: img.is_video ? 'video' : 'image',
-                    width: img.width,
-                    height: img.height,
-                    caption: img.caption
-                }
-            );
+            if (!img.is_video || loadParams.isDownloadMedia) {
+                media.push(
+                    {
+                        src: ['sources', unifiedData.postName],
+                        filename: filename,
+                        type: img.is_video ? 'video' : 'image',
+                        width: img.width,
+                        height: img.height,
+                        caption: img.caption
+                    }
+                );
+            }
         }
         return media;
     }
