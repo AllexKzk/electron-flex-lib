@@ -46,15 +46,14 @@ function connectRequests(mainWindow){
         request.on('response', response => {
             response.on('error', (error) => mainWindow.webContents.send("handleAlert", {message: JSON.stringify(error), type: 'error'}));
     
-            let data = new Stream();							//FIX IT: 404 etc
+            let data = new Stream()
             response.on('data', (chunk) => data.push(chunk));
             response.on('end', () => {
-                const srcDir = path.join('./sources', args.dir);					
-                fs.mkdir(srcDir, { recursive: true }, err => { 									//create source dir
+                fs.mkdir(args.dir, { recursive: true }, err => { 									//create source dir
                     if (err)
                         mainWindow.webContents.send("handleAlert", {message: JSON.stringify(err), type: 'error'});
                     else
-                        fs.writeFile(path.join(srcDir, args.filename), data.read(), err => { 	//write source file
+                        fs.writeFile(path.join(args.dir, args.filename), data.read(), err => { 	//write source file
                             if (err) mainWindow.webContents.send("handleAlert", {message: JSON.stringify(err), type: 'error'});
                         });
                 });

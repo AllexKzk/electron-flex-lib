@@ -36,5 +36,6 @@ export async function sendRequest(postUrl, pathToSave) {
     const endpoint = supportedSites[site].urlApi + contentId;
     window.electron.sendRequestFromServer(endpoint, pathToSave, site, {
         isDownloadMedia: localStorage.getItem('isDownloadMedia') === 'true',
+        sourceFolder: localStorage.getItem('srcDir') || './sources',
     });
 }

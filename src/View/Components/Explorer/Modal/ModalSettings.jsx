@@ -1,4 +1,5 @@
-import { Box, Checkbox, FormControlLabel, Modal, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Checkbox, FormControlLabel, IconButton, Modal, TextField, Typography } from "@mui/material";
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import { useState } from "react";
 
 export default function ModalSettings(props) {
@@ -14,26 +15,56 @@ export default function ModalSettings(props) {
         boxShadow: 24,
         p: 4,
     };
-
+    const [fontFamily, setFontFamily] = useState(localStorage.getItem('fontFamily') || 'Default');
     const [fontSize, setSize] = useState(localStorage.getItem('fontSize') || 20); //def value is 20px
+    const [srcPath, setSrcPath] = useState(localStorage.getItem('srcDir') || './sources');
     const [isDownloadMedia, setDownloadMedia] = useState(localStorage.getItem('isDownloadMedia') === 'true');
     const closeModal = () => {
         props.handleClose(false);
         if (fontSize > 0)
             localStorage.setItem('fontSize', fontSize);
         localStorage.setItem('isDownloadMedia', isDownloadMedia);
+        if (checkPath())
+            localStorage.setItem('srcDir', srcPath);
+    }
+
+    const checkPath = () => {
+        const state = window.electron.checkDirPath(srcPath);
+        return state;
     }
 
     return (
         <Modal open={props.isOpen} onClose={closeModal}>
             <Box sx={style}>
-                <TextField onChange={e => setSize(e.target.value)} label="Размер шрифта(px)" type="number" value={fontSize} />
-                <FormControlLabel 
+                <TextField label="Размер шрифта(px)"
+                    onChange={e => setSize(e.target.value)} 
+                    type="number" 
+                    value={fontSize}
+                />
+                <FormControlLabel label="Скачивать медиа"
                     control={<Checkbox checked={isDownloadMedia} 
                                 onChange={() => setDownloadMedia(!isDownloadMedia)} 
                             />} 
-                    label="Скачивать медиа"
                 />
+                <TextField label="Шрифт"
+                    value={fontFamily}
+                    onChange={e => setFontFamily(e.target.value)}
+                />
+                <Box display={'flex'}>
+                    <TextField label="Хранилище медиа" 
+                        fullWidth
+                        value={srcPath}
+                        onChange={e => setSrcPath(e.target.value)}
+                        color={checkPath() ? "success" : "error"}
+                    />
+                    <IconButton
+                        size={'large'}
+                        onClick={() => window.electron.openSource(srcPath)}
+                        disabled={!checkPath()}
+                    >
+                        <FolderOpenIcon/>
+                    </IconButton>
+                </Box>
                 <Box sx={{marginTop: 4, textAlign: 'center'}}>
                     <Typography variant="caption">
                         CREATED BY: ALLEX KZK <br/>

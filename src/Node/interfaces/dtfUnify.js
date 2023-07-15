@@ -1,6 +1,7 @@
 const { ipcRenderer } = require('electron'),
 showdown  = require('showdown');
 import uniform from "./uniform.json";
+import path from "path";
 
 export default async function dtfUnify(json, loadParams) {
     let unified = structuredClone(uniform);
@@ -20,14 +21,14 @@ export default async function dtfUnify(json, loadParams) {
     const getMediaContent = (content) => {
         let media = [];
         const converter = new showdown.Converter();
-        const saveDir = unifiedData.postName;
+        const saveDir = path.join(loadParams.sourceFolder, unifiedData.postName);
         for (const [index, img] of Object.entries(content)) {
             const type = img.image.data.type === 'gif' ? 'mp4' : img.image.data.type; //gif is lie x_x
             const filename = img.image.data.uuid + '.' + type;
             ipcRenderer.send('saveMedia', {url: dtfPicsSource + img.image.data.uuid, dir: saveDir, filename: filename});
             media.push(
                 {
-                    src: ['sources', saveDir],
+                    src: [saveDir],
                     filename: filename,
                     type: type === 'mp4' ? 'video' : 'image',
                     caption: converter.makeHtml(img.title)
@@ -38,10 +39,15 @@ export default async function dtfUnify(json, loadParams) {
     };
 
     const getAudioContent = (content) => {
-        ipcRenderer.send('saveMedia', {url: dtfAudioSource + content.data.uuid, dir: unifiedData.postName, filename: content.data.filename});
+        const saveDir = path.join(loadParams.sourceFolder, unifiedData.postName);
+        ipcRenderer.send('saveMedia', {
+            url: dtfAudioSource + content.data.uuid, 
+            dir: saveDir, 
+            filename: content.data.filename
+        });
         return[
             {
-                src: ['sources', unifiedData.postName],
+                src: [saveDir],
                 filename: content.data.filename,
                 type: 'audio',
                 caption: ''

@@ -1,7 +1,7 @@
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
-import SaveIcon from '@mui/icons-material/Save';
+import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 import {IconButton} from "@mui/material";
 import {themeContext} from "../../Theming/themes";
 import {useContext, useEffect, useRef, useState} from "react";
@@ -47,8 +47,11 @@ export default function Overlay(props) {
                         <IconButton size={'large'} onClick={theme.changeTheme}>
                             {theme.theme.palette.mode === 'dark' ? <Brightness4Icon /> : <Brightness7Icon />}
                         </IconButton>
-                        <IconButton size={'large'} onClick={() => window.electron.openSource(props.source)}>
-                            <SaveIcon/>
+                        <IconButton
+                            size={'large'}
+                            onClick={() => window.electron.openSource(localStorage.getItem('srcDir') || './sources', props.source)}
+                        >
+                            <FolderOpenIcon/>
                         </IconButton>
                     </div>
                 </div>

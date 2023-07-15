@@ -104,11 +104,12 @@ async function createDir(path, name){
         }); 
 }
 
-async function openSource(postName){
+async function openSource(folder, postName){
+    const dir = postName ? path.join(folder, postName) : folder;
     if (process.env.PLATFORM === 'win')
-        exec(`start %windir%\\explorer.exe "${path.join('.\\sources\\', postName)}"`);
+        exec(`start %windir%\\explorer.exe "${path.resolve(dir)}"`);
     else if (process.env.PLATFORM === 'linux')
-        spawn('open', [path.join('./sources', postName)]);
+        spawn('open', [path.resolve(dir)]);
     else
         throw new Error('Undefined PLATFORM .env variable: win/linux');
 }
@@ -117,12 +118,29 @@ async function setAlertHandler(handler) {
     alertHandler = handler;                                                             //preload handler
     ipcRenderer.on('handleAlert', (event, args) => handler(args.message, args.type));   //ipcMain handler
 }
+function checkDirPath(path) {
+    return fs.existsSync(path);
+}
+
+function getFolderAutocomplite(root) {
+    if (!fs.existsSync(root))
+        return [];
+
+    let folders = [];
+    fs.readdirSync(root, {withFileTypes: true}).forEach(dirent => {
+        if (!dirent.isFile())
+            folders.push({label: dirent.name});
+    });
+    return folders;
+}
 
 contextBridge.exposeInMainWorld('electron', {
-    getFolders: (root) => getFolders(root),                                                                     //open folder by path: ./lib/ + root
+    getFolders: (root) => getFolders(root),
+    getFolderAutocomplite: (root) => getFolderAutocomplite(root),                                                                 //open folder by path: ./lib/ + root
     getFile: async (src, filename, type, callback) => getFile(src, filename, type, callback),                   //get Page json
     sendRequestFromServer: async (url, pathToSave, site, loadParams) => sendRequestFromServer(url, pathToSave, site, loadParams),       //call ipcMain to send request
     createDir: async (path, name) => createDir(path, name),                                                     //create dit with name by path
-    openSource: async (postName) => openSource(postName),                                                       //open folder with sources
-    setAlertHandler: async (handler) => setAlertHandler(handler)                                                //callTopHandler
+    openSource: async (folder, postName = undefined) => openSource(folder, postName),                                                       //open folder with sources
+    setAlertHandler: async (handler) => setAlertHandler(handler),                                              //callTopHandler
+    checkDirPath: (path) => checkDirPath(path)
 });

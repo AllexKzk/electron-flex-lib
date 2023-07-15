@@ -6,7 +6,7 @@ import palette from './palette.json'
 const defaultTheme = (mode) => {
     return {
         palette: {
-            ...palette[mode]
+            ...palette[mode],
         },
         components: {
             MuiTypography: {

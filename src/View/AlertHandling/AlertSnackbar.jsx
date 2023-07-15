@@ -7,7 +7,6 @@ export default function AlertSnackbar() {
     const [alert, setAlert] = useState(null);
 
     useEffect(() => {
-        console.log('add handler')
         addHandler(setAlert);
     }, []);
 
