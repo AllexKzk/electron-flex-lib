@@ -5,7 +5,9 @@
             "main":"#ffb300"
         },
         "background":{
-            "card":"rgba(0, 0, 0, 0.07)"
+            "card":"rgba(0, 0, 0, 0.07)",
+            "main-page": "#f6f6f6",
+            "context-page": "#ececec"
         },
         "action":{
             "active":"#ffb300",
@@ -21,7 +23,9 @@
             "main":"#ffb300"
         },
         "background":{
-            "card":"rgba(255, 255, 255, 0.07)"
+            "card":"rgba(255, 255, 255, 0.07)",
+            "main-page": "#2e2e2e",
+            "context-page": "#0d0d0d"
         },
         "action":{
             "active":"#ffb300",

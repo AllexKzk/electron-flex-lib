@@ -2,7 +2,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import {IconButton, Paper} from "@mui/material";
+import {IconButton} from "@mui/material";
 import {themeContext} from "../../Theming/themes";
 import {useContext, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";
@@ -20,7 +20,7 @@ export default function Overlay(props) {
 
     const handleScroll = (e) => {
         const yPos = window.pageYOffset;
-        if (yPos >= scrollYPos)     //hide if scroll down
+        if (yPos > scrollYPos)     //hide if scroll down
             blockRef.current.style.top = '-50px';
         if (!yPos)                  //show on top
             blockRef.current.style.top = '0';

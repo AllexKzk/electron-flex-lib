@@ -106,6 +106,8 @@ async function createDir(path, name){
 
 async function openSource(folder, postName){
     const dir = postName ? path.join(folder, postName) : folder;
+
+    //change before build:
     if (process.env.PLATFORM === 'win')
         exec(`start %windir%\\explorer.exe "${path.resolve(dir)}"`);
     else if (process.env.PLATFORM === 'linux')

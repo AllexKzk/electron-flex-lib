@@ -22,9 +22,8 @@ export default function ItemModal(props) {
 
     useEffect(() => {
         setOpen(props.isOpen);
-        if (props.isOpen){
+        if (props.isOpen) {
             addHandler(setAlert);
-            console.log('set')
         }
     }, [props.isOpen]);
 
@@ -34,7 +33,6 @@ export default function ItemModal(props) {
     }, [alert]);
 
     const clicked = async() => {
-        console.log(input, props.path);
         props.callback(input, props.path);
     }
 

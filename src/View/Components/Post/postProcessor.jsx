@@ -44,7 +44,7 @@ export default function Post(props) {
         <>
         {
             viewElement.map((block) =>    
-                <Box m={2}>
+                <Box p={'5'} marginBottom={4}>
                     {block}
                 </Box>)
         }

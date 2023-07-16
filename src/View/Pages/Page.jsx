@@ -1,6 +1,6 @@
 import {useLocation} from 'react-router-dom';
 import React, {useEffect, useState} from "react";
-import {Container} from "@mui/material";
+import {Box, Container, Snackbar} from "@mui/material";
 import Post from '../Components/Post/postProcessor.jsx';
 import Overlay from "../Components/Post/Overlay.jsx";
 
@@ -11,6 +11,7 @@ export default function Page() {
     const src = ['lib/'].concat(location.state.src);
 
     const [fontSize, setSize] = useState(parseInt(localStorage.getItem('fontSize')) || 20);
+    const [isOpened, setSnack] = useState(false);
 
     useEffect(() => {
         window.electron.getFile(src, location.state.file, 'utf8', setPostContent);
@@ -20,7 +21,7 @@ export default function Page() {
     //handle resize font:
     const handleKey = (e) => {
         if (fontSize && e.ctrlKey){                 //if key pressed with ctrl
-            switch(e.key){
+            switch(e.key) {
                 case '=':
                     setSize(fontSize + 1);
                     break;
@@ -28,23 +29,39 @@ export default function Page() {
                     setSize(fontSize - 1);
                     break;
             }
+            setSnack(true);
         }
     };
+
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway')
+            return;
+        setSnack(false);
+    };
+
     useEffect(() => {
         document.addEventListener('keydown', handleKey);
         return () => document.removeEventListener('keydown', handleKey);
     }, [fontSize]);
 
     return (
-        <>
+        <Box sx={{backgroundColor: 'background.context-page'}}>
             {postContent &&
-                <>
+                <Box>
+                    <Snackbar
+                        open={isOpened}
+                        autoHideDuration={1000}
+                        onClose={handleClose}
+                        message={`${fontSize}px`}
+                    />
                     <Overlay path={location.state.src} source={postContent.postName}/>
-                    <Container sx={{fontSize: `${fontSize}px`, paddingBottom: 2}}>
+                    <Container
+                        sx={{fontSize: `${fontSize}px`, paddingBottom: 2, backgroundColor: 'background.main-page'}}
+                    >
                         <Post json={postContent} />
                     </Container>
-                </>
+                </Box>
             }
-        </>
+        </Box>
     );
 }
