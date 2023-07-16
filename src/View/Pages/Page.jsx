@@ -56,6 +56,7 @@ export default function Page() {
                     />
                     <Overlay path={location.state.src} source={postContent.postName}/>
                     <Container
+                        maxWidth={'md'}
                         sx={{fontSize: `${fontSize}px`, paddingBottom: 2, backgroundColor: 'background.main-page'}}
                     >
                         <Post json={postContent} />

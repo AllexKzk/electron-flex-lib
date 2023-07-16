@@ -8,15 +8,15 @@ require('dotenv').config();
 let alertHandler = null;
 
 function pathArrayToString(array) {
-    let path = '/';
+    let endPath = '';
     for (let folder of array) {
-        path += folder + '/';
+        endPath = path.join(endPath, folder)
     }
-    return path;
+    return endPath;
 }
 
 function getFolders(root) {
-    const lib = path.resolve(`./lib${pathArrayToString(root)}`);
+    const lib = path.join(`./lib`, pathArrayToString(root));
     
     if (!fs.existsSync(lib)){                                           //if ./lib doesn't exist
         fs.mkdir(lib, err => {                                          //create it
@@ -52,7 +52,7 @@ async function savePost(json, folder, site, url, loadParams) {
 
         unified.hash = hashString(JSON.stringify(unified.data));               //hash content block
         unified.link = url;                                                    //link to origin
-        fs.writeFile('./lib' + pathArrayToString(folder) + unified.data.postName + '.json', JSON.stringify(unified, null, 2), (err) => {
+        fs.writeFile(path.join('./lib', pathArrayToString(folder), unified.data.postName + '.json'), JSON.stringify(unified, null, 2), (err) => {
             if (err)
                 alertHandler(err.message, 'error');
             else
@@ -77,31 +77,33 @@ async function getFile(src, filename, type, callback) {
                     callback({});
             }
         },      
-        base64: (rawData) => callback(rawData.toString())   //media files
+        base64: (rawData) => {  //media files
+            if (rawData)
+                callback(rawData.toString())
+        }
     }
-
-    fs.readFile('.' + pathArrayToString(src) + filename,  type, function (err, data) {
+    const filePath = path.join(pathArrayToString(src), filename);
+    fs.readFile(filePath,  type, function (err, data) {
         if (err){
             if (type == 'utf8') //if we try to open page file
                 alertHandler('Файл не открывается *~*', 'error');
             else                //if we try to open media, it can be loading
-                setTimeout(() => getFile(src, filename, type, callback), 100);
+                setTimeout(() => getFile(src, filename, type, callback), 1000);
         }
-        else
-            formats[type](data);
+        formats[type](data);
     });
 }
 
-async function createDir(path, name){
+async function createDir(parent, name){
     if (['.', '/', '\\', '?', '*', ':'].map(char => name.includes(char)).includes(true))    //check name
         alertHandler('Непристойные символы', 'error');
     else                                                                                    //create dir
-        fs.mkdir('./lib' + pathArrayToString(path) + name, err => {
+        fs.mkdir(path.join('./lib', pathArrayToString(parent), name), err => {
             if (err)
                 alertHandler(err.message, 'error');
             else
-                alertHandler('Папка успешно создана', 'success');                                         
-        }); 
+                alertHandler('Папка успешно создана', 'success');
+        });
 }
 
 async function openSource(folder, postName){

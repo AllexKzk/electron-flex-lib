@@ -33,7 +33,7 @@ export default function Overlay(props) {
             state: {path: props.path}
         });
     };
-    
+
     return (
         <div 
             onMouseEnter={() => {blockRef.current.style.top = 0}} 
@@ -49,7 +49,8 @@ export default function Overlay(props) {
                         </IconButton>
                         <IconButton
                             size={'large'}
-                            onClick={() => window.electron.openSource(localStorage.getItem('srcDir') || './sources', props.source)}
+                            disabled={!window.electron.checkDirPath(`${localStorage.getItem('srcDir')}/${props.source}`)}
+                            onClick={() => window.electron.openSource(localStorage.getItem('srcDir'), props.source)}
                         >
                             <FolderOpenIcon/>
                         </IconButton>
