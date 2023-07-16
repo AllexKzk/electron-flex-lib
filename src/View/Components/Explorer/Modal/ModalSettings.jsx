@@ -1,6 +1,7 @@
 import { Autocomplete, Box, Checkbox, FormControlLabel, IconButton, Modal, TextField, Typography } from "@mui/material";
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { themeContext } from "../../../Theming/themes";
 
 export default function ModalSettings(props) {
     const style = {                         //Box cant styled from theme >_>
@@ -19,11 +20,16 @@ export default function ModalSettings(props) {
     const [fontSize, setSize] = useState(localStorage.getItem('fontSize') || 20); //def value is 20px
     const [srcPath, setSrcPath] = useState(localStorage.getItem('srcDir') || './sources');
     const [isDownloadMedia, setDownloadMedia] = useState(localStorage.getItem('isDownloadMedia') === 'true');
+    const theme = useContext(themeContext);
     const closeModal = () => {
         props.handleClose(false);
         if (fontSize > 0)
             localStorage.setItem('fontSize', fontSize);
         localStorage.setItem('isDownloadMedia', isDownloadMedia);
+        if (fontFamily !== 'Default'){
+            theme.setFamily(fontFamily);
+            localStorage.setItem('fontFamily', fontFamily);
+        }
         if (checkPath())
             localStorage.setItem('srcDir', srcPath);
     }
@@ -50,7 +56,7 @@ export default function ModalSettings(props) {
                     value={fontFamily}
                     onChange={e => setFontFamily(e.target.value)}
                 />
-                <Box display={'flex'}>
+                <Box display={'flex'} margin={'15px 0'}>
                     <TextField label="Хранилище медиа" 
                         fullWidth
                         value={srcPath}

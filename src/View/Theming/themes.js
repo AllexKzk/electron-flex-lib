@@ -12,7 +12,8 @@ const defaultTheme = (mode) => {
             MuiTypography: {
                 styleOverrides: {
                     root: {
-                        color: palette[mode].text.primary
+                        color: palette[mode].text.primary,
+                        fontFamily: 'inherit'
                     }
                 }
             },

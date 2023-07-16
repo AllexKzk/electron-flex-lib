@@ -2,7 +2,7 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
-import {IconButton} from "@mui/material";
+import {IconButton, Paper} from "@mui/material";
 import {themeContext} from "../../Theming/themes";
 import {useContext, useEffect, useRef, useState} from "react";
 import {useNavigate} from "react-router-dom";

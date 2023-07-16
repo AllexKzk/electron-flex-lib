@@ -7,7 +7,7 @@ import React, {useContext, useEffect, useState} from "react";
 
 export default function Layout(){
     const [theme, setTheme] = useState(useContext(themeContext).theme);
-
+    const [fontFamily, setFamily] = useState(localStorage.getItem('fontFamily') || '');
     useEffect(() => {
         if(localStorage.getItem('mode'))    //get theme stored locally and set it when app launched
             setTheme(localStorage.getItem('mode') === 'dark' ? darkTheme : lightTheme);
@@ -21,13 +21,15 @@ export default function Layout(){
     return (
         <themeContext.Provider value={{
             theme: darkTheme,
-            changeTheme: () => changeTheme()
+            changeTheme: () => changeTheme(),
+            setFamily: (fontFamily) => setFamily(fontFamily)
         }}>
             <ThemeProvider theme={theme}>
-                <Box sx={{
+                <Box style={{
                     bgcolor: 'background.default',
                     minHeight: '100%',
                     minWidth: '100%',
+                    fontFamily: `${fontFamily}`
                 }}>
                     <CssBaseline/>
                     <AlertSnackbar/>
